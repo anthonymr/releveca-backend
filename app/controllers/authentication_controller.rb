@@ -13,6 +13,7 @@ class AuthenticationController < ApplicationController
     return not_authenticated unless Current.user
 
     Current.user = nil
+    Setting.corporation = nil
     ok(nil, 'Logged out')
   end
 

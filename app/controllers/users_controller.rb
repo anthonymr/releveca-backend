@@ -18,6 +18,20 @@ class UsersController < ApplicationController
     Current.user.destroy ? head_no_content('User deleted') : unprocessable_entity(Current.user)
   end
 
+  def corporations
+    ok(Current.user.corporations, 'Corporations retrieved successfully')
+  end
+
+  def add_corporation
+    corporation = Corporation.find(params[:id])
+    return forbidden if Current.user.corporations.include?(corporation)
+
+    Current.user.corporations << corporation
+    ok(Current.user.no_password, 'Corporation added successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Corporation')
+  end
+
   private
 
   def user_params
