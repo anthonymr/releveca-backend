@@ -6,4 +6,12 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { minimum: 3, maximum: 50 }
   validates :last_name, presence: true, length: { minimum: 3, maximum: 50 }
   validates :user_name, presence: true, uniqueness: true, length: { minimum: 3, maximum: 50 }
+
+  def no_password
+    attributes.except('password_digest')
+  end
+
+  def self.all_no_password
+    select(:id, :name, :last_name, :user_name, :email)
+  end
 end
