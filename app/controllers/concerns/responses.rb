@@ -33,16 +33,10 @@ module Responses
 
   def head_no_content(message)
     head :no_content
-    render json: { message: }, status: :ok
+    render message:, status: :ok
   end
 
   def ok(json, message)
-    if json.present?
-      render json:, status: :ok
-    elsif message.present?
-      render json: { message: }, status: :ok
-    else
-      render json: { message: 'OK' }, status: :ok
-    end
+    render json: {payload: json, message: message || 'OK'}, status: :ok
   end
 end
