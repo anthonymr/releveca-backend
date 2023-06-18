@@ -37,6 +37,6 @@ module Responses
   end
 
   def ok(json, message)
-    render json: {payload: json, message: message || 'OK'}, status: :ok
+    render json: { payload: json, message: message || 'OK' }, status: :ok
   end
 end

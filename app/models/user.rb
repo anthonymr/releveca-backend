@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
+  has_and_belongs_to_many :corporations
 
   validates :email, presence: true, uniqueness: true, length: { minimum: 8, maximum: 50 },
                     format: { with: URI::MailTo::EMAIL_REGEXP }
