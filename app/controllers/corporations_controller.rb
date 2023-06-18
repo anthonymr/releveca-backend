@@ -1,6 +1,6 @@
 class CorporationsController < ApplicationController
   def index
-    ok(Corporation.all, 'Corporations retrieved successfully')
+    ok(Corporation.all_enabled, 'Corporations retrieved successfully')
   end
 
   def show
@@ -38,6 +38,18 @@ class CorporationsController < ApplicationController
     return unprocessable_entity(Setting.corporation) unless Setting.corporation.update(corporation_params)
 
     ok(Setting.corporation, 'Corporation updated successfully')
+  end
+
+  def change_status
+    corporation = Corporation.find(params[:id])
+    if corporation.update(status: params[:status])
+      accepted(corporation,
+               'Corporation statud changed')
+    else
+      unprocessable_entity(corporation)
+    end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Corporation')
   end
 
   private

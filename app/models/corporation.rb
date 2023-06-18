@@ -8,4 +8,9 @@ class Corporation < ApplicationRecord
   validates :phone, length: { maximum: 15 }
   validates :email, length: { maximum: 50 }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :website, length: { maximum: 50 }, allow_blank: true
+  validates :status, presence: true, inclusion: { in: %w[enabled disabled] }, length: { minimum: 3, maximum: 20 }
+
+  def self.all_enabled
+    all.where(status: 'enabled')
+  end
 end

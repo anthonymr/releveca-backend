@@ -3,6 +3,7 @@ class AuthenticationController < ApplicationController
 
   def create
     user = User.find_by(user_name: params[:user_name])
+    return invalid_login('User disabled') unless user.enable?
     return invalid_login unless user&.authenticate(params[:password])
 
     token = jwt_encode({ user_id: user.id })

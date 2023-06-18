@@ -19,16 +19,16 @@ module Responses
     render json: { errors: ["#{item} not found"] }, status: :not_found
   end
 
-  def invalid_login
-    render json: { errors: ['Invalid username or password'] }, status: :unauthorized
+  def invalid_login(message)
+    render json: { errors: [message || 'Invalid username or password'] }, status: :unauthorized
   end
 
-  def created(json)
-    render json:, status: :created
+  def created(json, message)
+    render json: { payload: json, message: message || 'Created' }, status: :created
   end
 
-  def accepted(json)
-    render json:, status: :accepted
+  def accepted(json, message)
+    render json: { payload: json, message: message || 'Acepted' }, status: :accepted
   end
 
   def head_no_content(message)
