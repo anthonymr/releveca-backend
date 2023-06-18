@@ -14,10 +14,6 @@ class UsersController < ApplicationController
     Current.user.update(user_params) ? accepted(Current.user.no_password) : unprocessable_entity(Current.user)
   end
 
-  def destroy
-    Current.user.destroy ? head_no_content('User deleted') : unprocessable_entity(Current.user)
-  end
-
   def corporations
     ok(Current.user.corporations, 'Corporations retrieved successfully')
   end
