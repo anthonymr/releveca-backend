@@ -15,7 +15,7 @@ class CorporationsController < ApplicationController
   end
 
   def update
-    return not_found('Corporation') unless Setting.corporation
+    return forbidden('No corporation selected') unless Setting.corporation
     return unprocessable_entity(Setting.corporation) unless Setting.corporation.update(corporation_params)
 
     ok(Setting.corporation, 'Corporation updated successfully')
@@ -28,7 +28,7 @@ class CorporationsController < ApplicationController
   end
 
   def current
-    return not_found('Corporation') unless Setting.corporation
+    return forbidden('No corporation selected') unless Setting.corporation
 
     ok(Setting.corporation, 'Corporation retrieved successfully')
   end
@@ -43,7 +43,7 @@ class CorporationsController < ApplicationController
   def items
     return forbidden('No corporation selected') unless Setting.corporation
 
-    ok(Setting.corporation.items, 'Items retrieved successfully')
+    ok(Setting.corporation.items.where(status: 'enabled'), 'Items retrieved successfully')
   end
 
   private

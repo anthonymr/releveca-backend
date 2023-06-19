@@ -14,9 +14,9 @@ Rails.application.routes.draw do
       patch 'corporations/:id/status', to: 'corporations#change_status', as: 'corporation_change_status'
       resources :corporations, except: %i[new destroy update edit]
 
-      patch 'items/:id/status', to: 'items#change_status', as: 'item_change_status' # implementar
-      patch 'items/:id/stock', to: 'items#change_stock', as: 'item_change_stock' # implementar
-      resources :items, except: %i[new edit destroy] # implementar
+      patch 'items/:id/status', to: 'items#change_status', as: 'item_change_status'
+      patch 'items/:id/stock', to: 'items#change_stock', as: 'item_change_stock'
+      resources :items, except: %i[new edit destroy]
 
       post 'auth', to: 'authentication#create'
       get 'auth', to: 'authentication#show'
