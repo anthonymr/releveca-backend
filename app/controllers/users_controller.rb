@@ -15,12 +15,9 @@ class UsersController < ApplicationController
   end
 
   def update
-    if Current.user.update(user_params)
-      accepted(Current.user.no_password,
-               'User updated')
-    else
-      unprocessable_entity(Current.user)
-    end
+    return unprocessable_entity(Current.user) unless Current.user.update(user_params)
+
+    accepted(Current.user.no_password, 'User updated')
   end
 
   def change_status
@@ -36,6 +33,7 @@ class UsersController < ApplicationController
 
   def add_corporation
     corporation = Corporation.find(params[:id])
+    return forbidden unless corporation&.enabled?
     return forbidden if Current.user.corporations.include?(corporation)
 
     Current.user.corporations << corporation

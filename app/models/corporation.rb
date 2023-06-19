@@ -13,4 +13,8 @@ class Corporation < ApplicationRecord
   def self.all_enabled
     all.where(status: 'enabled')
   end
+
+  def enabled?
+    status == 'enabled'
+  end
 end
