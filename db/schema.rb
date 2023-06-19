@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_18_212209) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_19_182011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_212209) do
     t.index ["user_id"], name: "index_corporations_users_on_user_id"
   end
 
+  create_table "items", force: :cascade do |t|
+    t.string "code", limit: 50, null: false
+    t.string "name", limit: 50, null: false
+    t.string "model", limit: 50
+    t.decimal "stock", precision: 10, scale: 2, default: "0.0", null: false
+    t.string "unit", limit: 10, default: "UND", null: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "index"
+    t.bigint "corporation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["corporation_id", "code"], name: "index_items_on_corporation_id_and_code", unique: true
+    t.index ["corporation_id"], name: "index_items_on_corporation_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string "var", null: false
     t.text "value"
@@ -56,4 +71,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_212209) do
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
   end
 
+  add_foreign_key "items", "corporations"
 end
