@@ -40,6 +40,12 @@ class CorporationsController < ApplicationController
     ok(Setting.corporation, 'Corporation setted successfully')
   end
 
+  def items
+    return forbidden('No corporation selected') unless Setting.corporation
+
+    ok(Setting.corporation.items, 'Items retrieved successfully')
+  end
+
   private
 
   def corporation_params

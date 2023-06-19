@@ -1,6 +1,6 @@
 module Responses
-  def forbidden
-    render json: { errors: ['Not authorized'] }, status: :unauthorized
+  def forbidden(message = 'Not authorized')
+    render json: { errors: [message] }, status: :unauthorized
   end
 
   def bad_request
