@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       patch 'items/:id/stock', to: 'items#change_stock', as: 'item_change_stock'
       resources :items, except: %i[new edit destroy]
 
+      resources :countries, only: %i[create index destroy]
+
       post 'auth', to: 'authentication#create'
       get 'auth', to: 'authentication#show'
       delete 'auth', to: 'authentication#destroy'
