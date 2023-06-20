@@ -20,6 +20,12 @@ Rails.application.routes.draw do
 
       resources :countries, only: %i[create index destroy]
 
+      patch 'clients/:id/approval', to: 'clients#change_approval', as: 'client_change_approval'
+      patch 'clients/:id/status', to: 'clients#change_status', as: 'client_change_status'
+      patch 'clients/:id', to: 'clients#patch_client', as: 'client_patch_client'
+      put 'clients', to: 'clients#update', as: 'client_update'
+      resources :clients, only: %i[create index show]
+
       post 'auth', to: 'authentication#create'
       get 'auth', to: 'authentication#show'
       delete 'auth', to: 'authentication#destroy'
