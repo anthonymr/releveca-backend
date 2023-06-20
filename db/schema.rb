@@ -10,9 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_112441) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_115300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "clients", force: :cascade do |t|
+    t.string "code", limit: 50, null: false
+    t.integer "type", default: 1, null: false
+    t.string "name", limit: 50, null: false
+    t.string "phone", limit: 50, null: false
+    t.string "status", limit: 50, null: false
+    t.string "notes", limit: 500
+    t.string "address", limit: 500, null: false
+    t.string "rif", limit: 15, null: false
+    t.boolean "taxpayer"
+    t.string "nit", limit: 15
+    t.string "email", limit: 50
+    t.integer "index"
+    t.bigint "corporation_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "country_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["corporation_id"], name: "index_clients_on_corporation_id"
+    t.index ["country_id"], name: "index_clients_on_country_id"
+    t.index ["rif"], name: "index_clients_on_rif", unique: true
+    t.index ["user_id"], name: "index_clients_on_user_id"
+  end
 
   create_table "corporations", force: :cascade do |t|
     t.string "name", limit: 50, null: false
@@ -79,5 +103,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_112441) do
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
   end
 
+  add_foreign_key "clients", "corporations"
+  add_foreign_key "clients", "countries"
+  add_foreign_key "clients", "users"
   add_foreign_key "items", "corporations"
 end
