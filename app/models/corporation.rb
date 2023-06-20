@@ -1,6 +1,7 @@
 class Corporation < ApplicationRecord
   has_and_belongs_to_many :users
   has_many :items, dependent: :restrict_with_error
+  has_many :clients, dependent: :restrict_with_error
 
   validates :name, presence: true, uniqueness: true, length: { maximum: 50, minimum: 2 }
   validates :rif, presence: true, uniqueness: true, length: { maximum: 15 },

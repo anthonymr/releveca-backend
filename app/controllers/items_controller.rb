@@ -34,10 +34,6 @@ class ItemsController < ApplicationController
     not_found('Item')
   end
 
-  def check_corporation
-    return forbidden('First select a corporation') unless Setting.corporation
-  end
-
   def item_params
     params.permit(:code, :name, :model, :stock, :unit, :price, :index)
   end

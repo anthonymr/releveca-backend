@@ -22,8 +22,8 @@ Rails.application.routes.draw do
 
       patch 'clients/:id/approval', to: 'clients#change_approval', as: 'client_change_approval'
       patch 'clients/:id/status', to: 'clients#change_status', as: 'client_change_status'
-      patch 'clients/:id', to: 'clients#patch_client', as: 'client_patch_client'
-      put 'clients', to: 'clients#update', as: 'client_update'
+      patch 'clients/:id', to: 'clients#patch', as: 'client_patch'
+      put 'clients/:id', to: 'clients#update', as: 'client_update'
       resources :clients, only: %i[create index show]
 
       post 'auth', to: 'authentication#create'

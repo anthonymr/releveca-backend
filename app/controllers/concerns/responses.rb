@@ -1,4 +1,6 @@
 module Responses
+  extend ActiveSupport::Concern
+
   def forbidden(message = 'Not authorized')
     render json: { errors: [message] }, status: :unauthorized
   end

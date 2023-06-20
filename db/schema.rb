@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_115300) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_20_182754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "clients", force: :cascade do |t|
     t.string "code", limit: 50, null: false
-    t.integer "type", default: 1, null: false
+    t.integer "client_type", default: 1, null: false
     t.string "name", limit: 50, null: false
     t.string "phone", limit: 50, null: false
     t.string "status", limit: 50, null: false
@@ -32,6 +32,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_115300) do
     t.bigint "country_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "approval", default: false, null: false
     t.index ["corporation_id"], name: "index_clients_on_corporation_id"
     t.index ["country_id"], name: "index_clients_on_country_id"
     t.index ["rif"], name: "index_clients_on_rif", unique: true
