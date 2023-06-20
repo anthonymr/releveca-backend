@@ -1,6 +1,6 @@
 class CountriesController < ApplicationController
   def index
-    ok(Country.all)
+    ok(Country.all, 'Countries retrieved successfully')
   end
 
   def create
