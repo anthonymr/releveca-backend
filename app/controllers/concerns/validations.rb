@@ -4,7 +4,7 @@ module Validations
   private
 
   def check_corporation
-    return forbidden('First select a corporation') unless Setting.corporation
+    return forbidden('First select a corporation') unless Current.corporation
   end
 
   def check_user

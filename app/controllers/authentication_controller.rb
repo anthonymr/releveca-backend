@@ -13,8 +13,9 @@ class AuthenticationController < ApplicationController
   def destroy
     return not_authenticated unless Current.user
 
+    Current.user.update(current_corporation: nil)
     Current.user = nil
-    Setting.corporation = nil
+
     ok(nil, 'Logged out')
   end
 

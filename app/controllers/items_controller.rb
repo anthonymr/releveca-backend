@@ -2,7 +2,7 @@ class ItemsController < ApplicationController
   before_action :check_corporation
 
   def index
-    ok(Setting.corporation.items.where(status: 'enabled'), 'Items retrieved successfully')
+    ok(Current.items.where(status: 'enabled'), 'Items retrieved successfully')
   end
 
   def show
@@ -10,7 +10,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    item = Setting.corporation.items.new(item_params)
+    item = Current.items.new(item_params)
     item.save ? ok(item, 'Item created successfully') : bad_request(item.errors)
   end
 
@@ -29,7 +29,7 @@ class ItemsController < ApplicationController
   private
 
   def item
-    Setting.corporation.items.find(params[:id])
+    Current.items.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     not_found('Item')
   end

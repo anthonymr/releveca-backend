@@ -3,7 +3,7 @@ class ClientsController < ApplicationController
   before_action :check_user
 
   def index
-    ok(clients, 'Clients retrieved successfully')
+    ok(Current.clients, 'Clients retrieved successfully')
   end
 
   def show
@@ -15,7 +15,7 @@ class ClientsController < ApplicationController
     new_client.status = 'enabled'
     new_client.approval = false
     new_client.user_id = Current.user.id
-    new_client.corporation_id = Setting.corporation.id
+    new_client.corporation = Current.corporation
     new_client.save ? ok(new_client, 'Client created') : bad_request(new_client.errors)
   end
 
@@ -42,16 +42,9 @@ class ClientsController < ApplicationController
   private
 
   def client
-    client = Setting.corporation.clients.find(params[:id])
-    return forbidden('Not allowed') unless client.mine?
-
-    client
+    Current.clients.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     not_found('Client')
-  end
-
-  def clients
-    Setting.corporation.clients.where(user_id: Current.user.id)
   end
 
   def client_params
