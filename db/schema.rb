@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_24_203620) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_24_233337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_24_203620) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", limit: 20, default: "enabled", null: false
+    t.bigint "default_currency_id"
+    t.bigint "base_currency_id"
+    t.index ["base_currency_id"], name: "index_corporations_on_base_currency_id"
+    t.index ["default_currency_id"], name: "index_corporations_on_default_currency_id"
     t.index ["name"], name: "index_corporations_on_name", unique: true
     t.index ["rif"], name: "index_corporations_on_rif", unique: true
   end
@@ -118,6 +122,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_24_203620) do
   add_foreign_key "clients", "corporations"
   add_foreign_key "clients", "countries"
   add_foreign_key "clients", "users"
+  add_foreign_key "corporations", "currencies", column: "base_currency_id"
+  add_foreign_key "corporations", "currencies", column: "default_currency_id"
   add_foreign_key "items", "corporations"
   add_foreign_key "users", "corporations", column: "current_corporation_id"
 end

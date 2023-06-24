@@ -9,6 +9,10 @@ class CorporationsController < ApplicationController
 
   def create
     corporation = Corporation.new(corporation_params)
+
+    corporation.base_currency = Currency.find(params[:base_currency_id])
+    corporation.default_currency = Currency.find(params[:default_currency_id])
+
     return unprocessable_entity(corporation) unless corporation.save
 
     ok(corporation, 'Corporation created successfully')
@@ -16,6 +20,10 @@ class CorporationsController < ApplicationController
 
   def update
     return forbidden('No corporation selected') unless Current.corporation
+
+    Current.corporation.base_currency = Currency.find(params[:base_currency_id])
+    Current.corporation.default_currency = Currency.find(params[:default_currency_id])
+
     return unprocessable_entity(Current.corporation) unless Current.corporation.update(corporation_params)
 
     ok(Current.corporation, 'Corporation updated successfully')
@@ -28,10 +36,6 @@ class CorporationsController < ApplicationController
   end
 
   def current
-    pp '#' * 100
-    pp Current.corporation
-    pp '#' * 100
-
     return forbidden('No corporation selected') unless Current.corporation
 
     ok(Current.corporation, 'Corporation retrieved successfully')
@@ -53,12 +57,12 @@ class CorporationsController < ApplicationController
   private
 
   def corporation_params
-    params.permit(:name, :rif, :address, :phone, :email, :website)
+    params.permit(:name, :rif, :address, :phone, :email, :website, :base_currency_id, :default_currency_id)
   end
 
   def corporation
     Corporation.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    not_found('Corporation')
+    not_found('Corporation') && return
   end
 end
