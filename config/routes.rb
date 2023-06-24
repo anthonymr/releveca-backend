@@ -26,6 +26,8 @@ Rails.application.routes.draw do
       put 'clients/:id', to: 'clients#update', as: 'client_update'
       resources :clients, only: %i[create index show]
 
+      resources :currencies, excep: %i[new edit]
+
       post 'auth', to: 'authentication#create'
       get 'auth', to: 'authentication#show'
       delete 'auth', to: 'authentication#destroy'
