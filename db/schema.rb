@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_24_235647) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_25_123318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_24_235647) do
     t.index ["corporation_id"], name: "index_items_on_corporation_id"
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.decimal "sub_total", null: false
+    t.decimal "taxes", null: false
+    t.decimal "total", null: false
+    t.decimal "rate", null: false
+    t.string "status", default: "creado", null: false
+    t.boolean "approved", default: false, null: false
+    t.integer "index"
+    t.decimal "balance", default: "0.0", null: false
+    t.bigint "payment_condition_id"
+    t.bigint "client_id", null: false
+    t.bigint "currency_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["client_id"], name: "index_orders_on_client_id"
+    t.index ["currency_id"], name: "index_orders_on_currency_id"
+    t.index ["payment_condition_id"], name: "index_orders_on_payment_condition_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "payment_conditions", force: :cascade do |t|
     t.string "code", limit: 10, null: false
     t.string "description", limit: 50, null: false
@@ -136,6 +157,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_24_235647) do
   add_foreign_key "corporations", "currencies", column: "base_currency_id"
   add_foreign_key "corporations", "currencies", column: "default_currency_id"
   add_foreign_key "items", "corporations"
+  add_foreign_key "orders", "clients"
+  add_foreign_key "orders", "currencies"
+  add_foreign_key "orders", "payment_conditions"
+  add_foreign_key "orders", "users"
   add_foreign_key "payment_conditions", "corporations"
   add_foreign_key "users", "corporations", column: "current_corporation_id"
 end

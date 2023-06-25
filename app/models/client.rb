@@ -1,6 +1,7 @@
 class Client < ApplicationRecord
   belongs_to :user
   belongs_to :corporation
+  has_many :orders, dependent: :restrict_with_error
 
   validates :code, presence: true, length: { maximum: 50 }, uniqueness: { scope: :corporation_id }
   validates :client_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
