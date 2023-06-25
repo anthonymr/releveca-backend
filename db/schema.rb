@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_25_142725) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_25_201858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -110,6 +110,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_142725) do
     t.index ["order_id"], name: "index_order_details_on_order_id"
   end
 
+  create_table "order_histories", force: :cascade do |t|
+    t.string "from", limit: 10, null: false
+    t.string "to", limit: 10, null: false
+    t.bigint "user_id", null: false
+    t.bigint "order_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_histories_on_order_id"
+    t.index ["user_id"], name: "index_order_histories_on_user_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.decimal "sub_total", null: false
     t.decimal "taxes", null: false
@@ -176,6 +187,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_142725) do
   add_foreign_key "order_details", "currencies"
   add_foreign_key "order_details", "items"
   add_foreign_key "order_details", "orders"
+  add_foreign_key "order_histories", "orders"
+  add_foreign_key "order_histories", "users"
   add_foreign_key "orders", "clients"
   add_foreign_key "orders", "corporations"
   add_foreign_key "orders", "currencies"
