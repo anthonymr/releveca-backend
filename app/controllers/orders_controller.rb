@@ -42,6 +42,18 @@ class OrdersController < ApplicationController
     end
   end
 
+  def change_status_next
+    order = Current.orders.find(params[:id])
+    order.next_status!
+    ok(order, 'Order status changed successfully to next')
+  end
+
+  def change_status_previous
+    order = Current.orders.find(params[:id])
+    order.previous_status!
+    ok(order, 'Order status changed successfully to previous')
+  end
+
   def change_approval
     order = Current.orders.find(params[:id])
 

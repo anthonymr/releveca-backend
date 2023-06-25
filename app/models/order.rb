@@ -14,6 +14,28 @@ class Order < ApplicationRecord
   validates :total, numericality: { greater_than_or_equal_to: :sub_total }
   validates :total, numericality: { greater_than_or_equal_to: :balance }
 
+  def next_status
+    index = Setting.order_statuses.find_index(status)
+    return status unless index < Setting.order_statuses.size - 1
+
+    Setting.order_statuses[index + 1]
+  end
+
+  def next_status!
+    update(status: next_status)
+  end
+
+  def previous_status
+    index = Setting.order_statuses.find_index(status)
+    return status unless index.positive?
+
+    Setting.order_statuses[index - 1]
+  end
+
+  def previous_status!
+    update(status: previous_status)
+  end
+
   def self.new_with_initials(order_params)
     order = Current.orders.new(order_params.except(:order_details))
 
