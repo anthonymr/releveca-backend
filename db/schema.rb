@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_25_123318) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_25_124044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -111,7 +111,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_123318) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.bigint "corporation_id", null: false
     t.index ["client_id"], name: "index_orders_on_client_id"
+    t.index ["corporation_id"], name: "index_orders_on_corporation_id"
     t.index ["currency_id"], name: "index_orders_on_currency_id"
     t.index ["payment_condition_id"], name: "index_orders_on_payment_condition_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -158,6 +160,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_123318) do
   add_foreign_key "corporations", "currencies", column: "default_currency_id"
   add_foreign_key "items", "corporations"
   add_foreign_key "orders", "clients"
+  add_foreign_key "orders", "corporations"
   add_foreign_key "orders", "currencies"
   add_foreign_key "orders", "payment_conditions"
   add_foreign_key "orders", "users"

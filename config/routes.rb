@@ -30,6 +30,10 @@ Rails.application.routes.draw do
 
       resources :payment_conditions, excep: %i[new edit]
 
+      patch 'orders/:id/approval', to: 'orders#change_approval', as: 'order_change_approval'
+      patch 'orders/:id/status', to: 'orders#change_status', as: 'order_change_status'
+      resources :orders, except: %i[new edit destroy]
+
       post 'auth', to: 'authentication#create'
       get 'auth', to: 'authentication#show'
       delete 'auth', to: 'authentication#destroy'

@@ -28,4 +28,8 @@ class Current < ActiveSupport::CurrentAttributes
   def payment_conditions
     corporation&.payment_conditions
   end
+
+  def orders
+    corporation&.orders&.where(user:)
+  end
 end
