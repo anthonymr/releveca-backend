@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_25_124044) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_25_142725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_124044) do
     t.index ["corporation_id"], name: "index_items_on_corporation_id"
   end
 
+  create_table "order_details", force: :cascade do |t|
+    t.integer "qty", null: false
+    t.decimal "unit_price", precision: 10, scale: 2, null: false
+    t.decimal "total_price", precision: 10, scale: 2, null: false
+    t.bigint "order_id", null: false
+    t.bigint "item_id", null: false
+    t.bigint "currency_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["currency_id"], name: "index_order_details_on_currency_id"
+    t.index ["item_id"], name: "index_order_details_on_item_id"
+    t.index ["order_id"], name: "index_order_details_on_order_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.decimal "sub_total", null: false
     t.decimal "taxes", null: false
@@ -159,6 +173,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_124044) do
   add_foreign_key "corporations", "currencies", column: "base_currency_id"
   add_foreign_key "corporations", "currencies", column: "default_currency_id"
   add_foreign_key "items", "corporations"
+  add_foreign_key "order_details", "currencies"
+  add_foreign_key "order_details", "items"
+  add_foreign_key "order_details", "orders"
   add_foreign_key "orders", "clients"
   add_foreign_key "orders", "corporations"
   add_foreign_key "orders", "currencies"
