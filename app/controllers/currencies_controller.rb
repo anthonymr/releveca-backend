@@ -21,7 +21,7 @@ class CurrenciesController < ApplicationController
     to_delete = Currency.find(params[:id])
     return ok(to_delete, 'Currency deleted') if to_delete.destroy
 
-    unprocessable_entity(to_delete.errors)
+    unprocessable_entity(to_delete)
   end
 
   private

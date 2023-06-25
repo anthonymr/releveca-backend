@@ -6,14 +6,12 @@ class Order < ApplicationRecord
   belongs_to :corporation
 
   validates :sub_total, :taxes, :total, presence: true
-  validates :approved, inclusion: { in: [true, false] }, allow_nil: false, default: false
-  validates :status, inclusion: { in: %w[creado procesado enviado entregado] }, allow_nil: false, default: 'creado'
-  validates :index, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :approved, inclusion: { in: [true, false] }
+  validates :status, inclusion: { in: %w[creado procesado enviado entregado] }
   validates :balance, numericality: { greater_than_or_equal_to: 0 }
   validates :sub_total, :taxes, :total, :rate, :balance, numericality: { greater_than: 0 }
   validates :total, numericality: { greater_than_or_equal_to: :sub_total }
   validates :total, numericality: { greater_than_or_equal_to: :balance }
-  validates :total, numericality: { equal_to: :sub_total + :taxes }
 
   def self.new_with_initials(order_params)
     order = Current.orders.new(order_params)
@@ -29,6 +27,8 @@ class Order < ApplicationRecord
     order.status = 'creado'
 
     order
+  rescue ActiveRecord::RecordNotFound
+    raise ActiveRecord::RecordNotFound, 'Client or payment condition not found'
   end
 
   def self.update_with_references(order_params, id)
@@ -42,5 +42,7 @@ class Order < ApplicationRecord
     order.rate = order.currency.rate
 
     order
+  rescue ActiveRecord::RecordNotFound
+    raise ActiveRecord::RecordNotFound, 'Client or payment condition not found'
   end
 end

@@ -7,14 +7,14 @@ class CountriesController < ApplicationController
     country = Country.new(country_params)
     return ok(country, 'Country created') if country.save
 
-    unprocessable_entity(country.errors)
+    unprocessable_entity(country)
   end
 
   def destroy
     country = Country.find(params[:id])
     return ok(country, 'Country deleted') if country.destroy
 
-    unprocessable_entity(country.errors)
+    unprocessable_entity(country)
   end
 
   private

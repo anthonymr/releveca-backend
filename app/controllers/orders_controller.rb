@@ -12,21 +12,19 @@ class OrdersController < ApplicationController
 
   def create
     order = Order.new_with_initials(order_params)
-
     if order.save
       ok(order, 'Order created successfully')
     else
-      unprocessable_entity(order.errors)
+      unprocessable_entity(order)
     end
   end
 
   def update
     order = Order.update_with_references(order_params, params[:id])
-
     if order.update(order_params)
       ok(order, 'Order updated successfully')
     else
-      unprocessable_entity(order.errors)
+      unprocessable_entity(order)
     end
   end
 
@@ -36,7 +34,7 @@ class OrdersController < ApplicationController
     if order.update(status: params[:status])
       ok(order, 'Order status changed successfully')
     else
-      unprocessable_entity(order.errors)
+      unprocessable_entity(order)
     end
   end
 
@@ -46,7 +44,7 @@ class OrdersController < ApplicationController
     if order.update(approved: params[:approved])
       ok(order, 'Order approval changed successfully')
     else
-      unprocessable_entity(order.errors)
+      unprocessable_entity(order)
     end
   end
 
