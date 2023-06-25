@@ -7,16 +7,20 @@ class OrdersController < ApplicationController
   end
 
   def show
-    ok(Current.orders.find(params[:id]), 'Order retrieved successfully')
+    ok(Current.orders.find(params[:id]).with_relations, 'Order retrieved successfully')
   end
 
   def create
     order = Order.new_with_initials(order_params)
+    order.add_details(order_params[:order_details])
+
     if order.save
       ok(order, 'Order created successfully')
     else
       unprocessable_entity(order)
     end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Client, item or payment condition not found')
   end
 
   def update
@@ -58,7 +62,12 @@ class OrdersController < ApplicationController
       :sub_total,
       :taxes,
       :total,
-      :status
+      :status,
+      order_details: %i[
+        qty
+        item_id
+        currency_id
+      ]
     )
   end
 end

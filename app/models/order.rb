@@ -15,7 +15,7 @@ class Order < ApplicationRecord
   validates :total, numericality: { greater_than_or_equal_to: :balance }
 
   def self.new_with_initials(order_params)
-    order = Current.orders.new(order_params)
+    order = Current.orders.new(order_params.except(:order_details))
 
     order.user = Current.user
     order.corporation = Current.corporation
@@ -38,12 +38,36 @@ class Order < ApplicationRecord
     order.update(client: Current.clients.find(order_params[:client_id]))
     order.update(currency: Currency.find(order_params[:currency_id]))
     order.update(payment_condition: Current.payment_conditions.find(order_params[:payment_condition_id]))
-
     order.balance = order_params[:total]
     order.rate = order.currency.rate
-
     order
   rescue ActiveRecord::RecordNotFound
     raise ActiveRecord::RecordNotFound, 'Client or payment condition not found'
+  end
+
+  def add_details(details_params)
+    details_params.each do |order_detail|
+      new_detail = order_details.new(order_detail)
+      new_detail.item = Current.items.find(order_detail[:item_id])
+      new_detail.currency = Currency.find(order_detail[:currency_id])
+      new_detail.unit_price = new_detail.item.price
+      new_detail.total_price = new_detail.qty * new_detail.unit_price
+      new_detail.save!
+    end
+  end
+
+  def with_relations
+    order = attributes
+    order['client'] = client.attributes
+    order['user'] = user.attributes
+    order['currency'] = currency.attributes
+    order['payment_condition'] = payment_condition.attributes
+
+    order['order_details'] = order_details.map do |order_detail|
+      detail = order_detail.attributes
+      detail['item'] = order_detail.item.attributes
+      detail
+    end
+    order
   end
 end
