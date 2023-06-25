@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       patch 'orders/:id/status', to: 'orders#change_status', as: 'order_change_status'
       patch 'orders/:id/status_next', to: 'orders#change_status_next', as: 'order_change_status_next'
       patch 'orders/:id/status_previous', to: 'orders#change_status_previous', as: 'order_change_status_previous'
+      get 'orders/:id/history', to: 'orders#history', as: 'order_history'
       resources :orders, except: %i[new edit destroy]
 
       namespace :settings do

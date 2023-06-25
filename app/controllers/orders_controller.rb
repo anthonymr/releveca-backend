@@ -35,7 +35,7 @@ class OrdersController < ApplicationController
   def change_status
     order = Current.orders.find(params[:id])
 
-    if order.update(status: params[:status])
+    if order.change_status!(params[:status])
       ok(order, 'Order status changed successfully')
     else
       unprocessable_entity(order)
@@ -62,6 +62,11 @@ class OrdersController < ApplicationController
     else
       unprocessable_entity(order)
     end
+  end
+
+  def history
+    order = Current.orders.find(params[:id])
+    ok(order.order_histories, 'Order history retrieved successfully')
   end
 
   private
