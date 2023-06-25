@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_24_233337) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_24_235647) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_24_233337) do
     t.index ["corporation_id"], name: "index_items_on_corporation_id"
   end
 
+  create_table "payment_conditions", force: :cascade do |t|
+    t.string "code", limit: 10, null: false
+    t.string "description", limit: 50, null: false
+    t.integer "days", null: false
+    t.integer "index"
+    t.bigint "corporation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["corporation_id"], name: "index_payment_conditions_on_corporation_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string "var", null: false
     t.text "value"
@@ -125,5 +136,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_24_233337) do
   add_foreign_key "corporations", "currencies", column: "base_currency_id"
   add_foreign_key "corporations", "currencies", column: "default_currency_id"
   add_foreign_key "items", "corporations"
+  add_foreign_key "payment_conditions", "corporations"
   add_foreign_key "users", "corporations", column: "current_corporation_id"
 end
