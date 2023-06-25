@@ -5,6 +5,7 @@ class Order < ApplicationRecord
   belongs_to :payment_condition
   belongs_to :corporation
   has_many :order_details, dependent: :destroy
+  has_many :order_histories, dependent: :destroy
 
   validates :sub_total, :taxes, :total, presence: true
   validates :approved, inclusion: { in: [true, false] }
@@ -14,6 +15,15 @@ class Order < ApplicationRecord
   validates :total, numericality: { greater_than_or_equal_to: :sub_total }
   validates :total, numericality: { greater_than_or_equal_to: :balance }
 
+  def change_status!(new_status)
+    initial_status = status
+    return true if initial_status == new_status
+
+    result = update(status: new_status)
+    order_histories.create(from: initial_status, to: new_status, user: Current.user)
+    result
+  end
+
   def next_status
     index = Setting.order_statuses.find_index(status)
     return status unless index < Setting.order_statuses.size - 1
@@ -22,7 +32,11 @@ class Order < ApplicationRecord
   end
 
   def next_status!
+    initial_status = status
+    return if initial_status == next_status
+
     update(status: next_status)
+    order_histories.create(from: initial_status, to: status, user: Current.user)
   end
 
   def previous_status
@@ -33,7 +47,11 @@ class Order < ApplicationRecord
   end
 
   def previous_status!
+    initial_status = status
+    return if initial_status == previous_status
+
     update(status: previous_status)
+    order_histories.create(from: initial_status, to: status, user: Current.user)
   end
 
   def self.new_with_initials(order_params)
