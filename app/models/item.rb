@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   belongs_to :corporation
+  has_many :order_details, dependent: :restrict_with_error
 
   validates :code, presence: true, length: { maximum: 50 }
   validates :name, presence: true, length: { maximum: 50 }

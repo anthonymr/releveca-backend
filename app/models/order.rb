@@ -4,6 +4,7 @@ class Order < ApplicationRecord
   belongs_to :currency
   belongs_to :payment_condition
   belongs_to :corporation
+  has_many :order_details, dependent: :destroy
 
   validates :sub_total, :taxes, :total, presence: true
   validates :approved, inclusion: { in: [true, false] }
