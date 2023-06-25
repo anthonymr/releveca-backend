@@ -34,6 +34,10 @@ Rails.application.routes.draw do
       patch 'orders/:id/status', to: 'orders#change_status', as: 'order_change_status'
       resources :orders, except: %i[new edit destroy]
 
+      namespace :settings do
+        get 'modules', to: 'modules#index', as: 'settings_modules'
+      end
+
       post 'auth', to: 'authentication#create'
       get 'auth', to: 'authentication#show'
       delete 'auth', to: 'authentication#destroy'
