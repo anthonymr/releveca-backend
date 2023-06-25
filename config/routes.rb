@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 
       resources :currencies, excep: %i[new edit]
 
+      resources :payment_conditions, excep: %i[new edit]
+
       post 'auth', to: 'authentication#create'
       get 'auth', to: 'authentication#show'
       delete 'auth', to: 'authentication#destroy'

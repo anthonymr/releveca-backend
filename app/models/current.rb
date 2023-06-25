@@ -24,4 +24,8 @@ class Current < ActiveSupport::CurrentAttributes
   def clients
     corporation&.clients&.where(user:)
   end
+
+  def payment_conditions
+    corporation&.payment_conditions
+  end
 end

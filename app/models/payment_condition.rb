@@ -1,4 +1,4 @@
-class PaymentCondition < ActiveRecord
+class PaymentCondition < ApplicationRecord
   belongs_to :corporation
 
   validates :code, presence: true, length: { maximum: 10 }
@@ -6,4 +6,8 @@ class PaymentCondition < ActiveRecord
   validates :days, presence: true, numericality: { only_integer: true }
   validates :index, numericality: { only_integer: true }, allow_nil: true
   validates :corporation, presence: true
+
+  def allowed?
+    corporation == Current.corporation
+  end
 end
