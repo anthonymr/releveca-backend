@@ -10,7 +10,7 @@ class Current < ActiveSupport::CurrentAttributes
   end
 
   def corporations
-    user&.corporations
+    user&.corporations&.where(status: 'enabled')
   end
 
   def items

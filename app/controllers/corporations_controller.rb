@@ -1,6 +1,6 @@
 class CorporationsController < ApplicationController
   def index
-    ok(Corporation.all_enabled, 'Corporations retrieved successfully')
+    ok(Current.corporations, 'Corporations retrieved successfully')
   end
 
   def show
