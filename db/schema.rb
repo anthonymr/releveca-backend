@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_25_201858) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_20_120249) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -82,7 +82,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_201858) do
 
   create_table "items", force: :cascade do |t|
     t.string "code", limit: 50, null: false
-    t.string "name", limit: 50, null: false
+    t.string "name", limit: 250, null: false
     t.string "model", limit: 50
     t.decimal "stock", precision: 10, scale: 2, default: "0.0", null: false
     t.string "unit", limit: 10, default: "UND", null: false
