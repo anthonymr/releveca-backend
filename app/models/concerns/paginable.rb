@@ -14,8 +14,8 @@ module Paginable
       previous_page: previous_page.to_s
     }
 
-    return { pagination:, payload: sliced.last } if real_page.next > sliced.size
+    return { pagination:, items: sliced.last } if real_page.next > sliced.size
 
-    { pagination:, payload: items.each_slice(count).to_a[page.to_i - 1] }
+    { pagination:, items: items.each_slice(count).to_a[page.to_i - 1] }
   end
 end
