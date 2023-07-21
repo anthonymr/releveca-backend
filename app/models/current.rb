@@ -1,4 +1,6 @@
 class Current < ActiveSupport::CurrentAttributes
+  include ::Paginable
+
   attribute :user
 
   def corporation
@@ -23,6 +25,10 @@ class Current < ActiveSupport::CurrentAttributes
 
   def clients
     corporation&.clients&.where(user:)
+  end
+
+  def clients_page(page, count)
+    paginate(clients, page, count)
   end
 
   def payment_conditions
