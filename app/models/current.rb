@@ -19,6 +19,13 @@ class Current < ActiveSupport::CurrentAttributes
     corporation&.items
   end
 
+  def items_page(page, count = 12)
+    pp items
+    pp page
+    pp count
+    paginate(items, page, count)
+  end
+
   def items_enabled
     corporation&.items&.where(status: 'enabled')
   end

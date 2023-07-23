@@ -2,7 +2,11 @@ class ItemsController < ApplicationController
   before_action :check_corporation
 
   def index
-    ok(Current.items.where(status: 'enabled'), 'Items retrieved successfully')
+    if params[:page]
+      ok(Current.items_page(params[:page], params[:count]), 'Items retrieved successfully')
+    else
+      ok(Current.items, 'Items retrieved successfully')
+    end
   end
 
   def show
