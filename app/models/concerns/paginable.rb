@@ -1,7 +1,9 @@
 module Paginable
   extend ActiveSupport::Concern
 
-  def paginate(items, page, count = 10)
+  def paginate(items, page = nil, count = 10)
+    return items unless page
+
     sliced = items.each_slice(count.to_i).to_a
     real_page = page.to_i - 1
     next_page = sliced.size < real_page + 2 ? real_page + 2 : real_page.next

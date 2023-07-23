@@ -2,11 +2,7 @@ class ItemsController < ApplicationController
   before_action :check_corporation
 
   def index
-    if params[:page]
-      ok(Current.items_page(params[:page], params[:count]), 'Items retrieved successfully')
-    else
-      ok(Current.items, 'Items retrieved successfully')
-    end
+    ok(Current.items_page(params[:page], params[:count]), 'Items retrieved successfully')
   end
 
   def show

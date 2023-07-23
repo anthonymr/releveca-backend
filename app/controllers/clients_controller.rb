@@ -3,11 +3,7 @@ class ClientsController < ApplicationController
   before_action :check_user
 
   def index
-    if params[:page]
-      ok(Current.clients_page(params[:page], 10), 'Clients retrieved successfully')
-    else
-      ok(Current.clients, 'Clients retrieved successfully')
-    end
+    ok(Current.clients_page(params[:page], 10), 'Clients retrieved successfully')
   end
 
   def show

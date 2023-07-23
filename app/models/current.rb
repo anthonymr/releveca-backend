@@ -19,10 +19,7 @@ class Current < ActiveSupport::CurrentAttributes
     corporation&.items
   end
 
-  def items_page(page, count = 12)
-    pp items
-    pp page
-    pp count
+  def items_page(page = nil, count = 12)
     paginate(items, page, count)
   end
 
@@ -34,7 +31,7 @@ class Current < ActiveSupport::CurrentAttributes
     corporation&.clients&.where(user:)
   end
 
-  def clients_page(page, count)
+  def clients_page(page = nil, count = 10)
     paginate(clients, page, count)
   end
 
