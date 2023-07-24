@@ -4,6 +4,7 @@ class User < ApplicationRecord
   belongs_to :current_corporation, class_name: 'Corporation', optional: true
   has_many :orders, dependent: :restrict_with_error
   has_many :order_histories, dependent: :restrict_with_error
+  has_many :clients, dependent: :restrict_with_error
 
   validates :email, presence: true, uniqueness: true, length: { minimum: 8, maximum: 50 },
                     format: { with: URI::MailTo::EMAIL_REGEXP }

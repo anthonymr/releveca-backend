@@ -1,4 +1,6 @@
 class Client < ApplicationRecord
+  extend Paginable
+
   belongs_to :user
   belongs_to :corporation
   has_many :orders, dependent: :restrict_with_error
@@ -26,5 +28,25 @@ class Client < ApplicationRecord
 
   def approved?
     approval
+  end
+
+  class << self
+    def currents
+      Current.user&.clients
+    end
+
+    def currents_search(str = '')
+      return Client.currents if str.empty?
+
+      Client.currents.where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
+    end
+
+    def currents_page(page = nil, count = 10, str = '')
+      Client.paginate(Client.currents_search(str), page, count)
+    end
+
+    def currents_enabled
+      Item.currents&.where(approval: true)
+    end
   end
 end
