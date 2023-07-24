@@ -4,7 +4,7 @@ class Current < ActiveSupport::CurrentAttributes
   attribute :user
 
   def corporation
-    user&.current_corporation
+    user.current_corporation
   end
 
   def corporation=(corporation)

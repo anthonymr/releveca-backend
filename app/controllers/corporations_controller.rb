@@ -45,7 +45,7 @@ class CorporationsController < ApplicationController
     return forbidden unless Current.corporations.include?(corporation)
 
     Current.corporation = corporation
-    ok(Current.corporation, 'Corporation setted successfully')
+    ok(Current.corporation.with_childs, 'Corporation setted successfully')
   end
 
   def items

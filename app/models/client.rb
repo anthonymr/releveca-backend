@@ -35,8 +35,8 @@ class Client < ApplicationRecord
       Current.user&.clients
     end
 
-    def currents_search(str = '')
-      return Client.currents if str.empty?
+    def currents_search(str = nil)
+      return Client.currents unless str
 
       Client.currents.where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
     end

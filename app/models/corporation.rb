@@ -25,4 +25,11 @@ class Corporation < ApplicationRecord
   def enabled?
     status == 'enabled'
   end
+
+  def with_childs
+    attributes.merge(
+      base_currency: base_currency.attributes,
+      default_currency: default_currency.attributes
+    )
+  end
 end
