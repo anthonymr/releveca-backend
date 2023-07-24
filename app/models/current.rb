@@ -15,18 +15,6 @@ class Current < ActiveSupport::CurrentAttributes
     user&.corporations&.where(status: 'enabled')
   end
 
-  def items
-    corporation&.items
-  end
-
-  def items_page(page = nil, count = 12)
-    paginate(items, page, count)
-  end
-
-  def items_enabled
-    corporation&.items&.where(status: 'enabled')
-  end
-
   def clients
     corporation&.clients&.where(user:)
   end

@@ -51,7 +51,7 @@ class CorporationsController < ApplicationController
   def items
     return forbidden('No corporation selected') unless Current.corporation
 
-    ok(Current.items_enabled)
+    ok(Item.currents_enabled)
   end
 
   private
