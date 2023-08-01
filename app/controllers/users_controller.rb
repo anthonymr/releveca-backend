@@ -10,21 +10,21 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.new(user_params)
-    user.save ? created(user.no_password, 'User created') : unprocessable_entity(user)
+    new_user = User.new(user_params)
+    new_user.save ? created(new_user.no_password, 'User created') : unprocessable_entity(new_user)
   end
 
   def update
-    return unprocessable_entity(Current.user) unless Current.user.update(user_params)
+    return ok(Current.user.no_password, 'User updated') if Current.user.update(user_params)
 
-    accepted(Current.user.no_password, 'User updated')
+    return unprocessable_entity(Current.user)
   end
 
   def change_status
     user = User.find(params[:id])
-    user.update(status: params[:status]) ? accepted(user.no_password, 'User updated') : unprocessable_entity(user)
+    user.update(status: params[:status]) ? ok(user.no_password, 'User updated') : unprocessable_entity(user)
   rescue ActiveRecord::RecordNotFound
-    not_found('User')
+    not_found
   end
 
   def corporations
@@ -33,8 +33,8 @@ class UsersController < ApplicationController
 
   def add_corporation
     corporation = Corporation.find(params[:id])
-    return forbidden unless corporation&.enabled?
-    return forbidden if Current.user.corporations.include?(corporation)
+    return unauthorized unless corporation&.enabled?
+    return unauthorized if Current.user.corporations.include?(corporation)
 
     Current.user.corporations << corporation
     ok(Current.user.no_password, 'Corporation added successfully')

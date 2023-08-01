@@ -17,11 +17,10 @@ class CurrenciesController < ApplicationController
   end
 
   def destroy
-    # Check if currency is in use before destroy when implemented
     to_delete = Currency.find(params[:id])
-    return ok(to_delete, 'Currency deleted') if to_delete.destroy
-
-    unprocessable_entity(to_delete)
+    ok(to_delete, 'Currency deleted') if to_delete.destroy
+  rescue ActiveRecord::RecordNotFound
+    not_found
   end
 
   private
@@ -31,6 +30,8 @@ class CurrenciesController < ApplicationController
   end
 
   def currency
-    @currency || Currency.find(params[:id])
+    @currency ||= Currency.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    not_found
   end
 end

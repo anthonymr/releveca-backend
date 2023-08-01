@@ -11,11 +11,11 @@ class OrdersController < ApplicationController
   end
 
   def create
-    order = Order.new_with_initials(order_params)
-    order.add_details(order_params[:order_details])
+    new_order = Order.new_with_initials(order_params)
+    new_order.add_details(order_params[:order_details])
 
-    if order.save
-      ok(order, 'Order created successfully')
+    if new_order.save
+      ok(new_order, 'Order created successfully')
     else
       unprocessable_entity(order)
     end

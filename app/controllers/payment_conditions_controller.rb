@@ -7,7 +7,7 @@ class PaymentConditionsController < ApplicationController
 
   def show
     payment_condition = Current.payment_conditions.find(params[:id])
-    return forbidden('payment_condition not found') unless payment_condition.allowed?
+    return unauthorized('payment_condition not found') unless payment_condition.allowed?
 
     ok(payment_condition, 'payment_condition retrieved successfully')
   end
@@ -15,22 +15,22 @@ class PaymentConditionsController < ApplicationController
   def create
     payment_condition = PaymentCondition.new(payment_condition_params)
     payment_condition.corporation = Current.corporation
-    return forbidden('payment_condition not valid') unless payment_condition.save
+    return unauthorized('payment_condition not valid') unless payment_condition.save
 
     ok(payment_condition, 'payment_condition created successfully')
   end
 
   def update
     payment_condition = Current.payment_conditions.find(params[:id])
-    return forbidden('payment_condition not found') unless payment_condition.allowed?
-    return forbidden('payment_condition not valid') unless payment_condition.update(payment_condition_params)
+    return unauthorized('payment_condition not found') unless payment_condition.allowed?
+    return unauthorized('payment_condition not valid') unless payment_condition.update(payment_condition_params)
 
     ok(payment_condition, 'payment_condition updated successfully')
   end
 
   def destroy
     payment_condition = Current.payment_conditions.find(params[:id])
-    return forbidden('payment_condition not found') unless payment_condition.allowed?
+    return unauthorized('payment_condition not found') unless payment_condition.allowed?
 
     payment_condition.destroy
     ok(payment_condition, 'payment_condition destroyed successfully')

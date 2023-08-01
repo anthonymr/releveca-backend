@@ -8,18 +8,18 @@ class CorporationsController < ApplicationController
   end
 
   def create
-    corporation = Corporation.new(corporation_params)
+    new_corporation = Corporation.new(corporation_params)
 
-    corporation.base_currency = Currency.find(params[:base_currency_id])
-    corporation.default_currency = Currency.find(params[:default_currency_id])
+    new_corporation.base_currency = Currency.find(params[:base_currency_id])
+    new_corporation.default_currency = Currency.find(params[:default_currency_id])
 
-    return unprocessable_entity(corporation) unless corporation.save
+    return unprocessable_entity(new_corporation) unless new_corporation.save
 
-    ok(corporation, 'Corporation created successfully')
+    ok(new_corporation, 'Corporation created successfully')
   end
 
   def update
-    return forbidden('No corporation selected') unless Current.corporation
+    return unauthorized('No corporation selected') unless Current.corporation
 
     Current.corporation.base_currency = Currency.find(params[:base_currency_id])
     Current.corporation.default_currency = Currency.find(params[:default_currency_id])
@@ -32,24 +32,24 @@ class CorporationsController < ApplicationController
   def change_status
     return unprocessable_entity(corporation) unless corporation.update(status: params[:status])
 
-    accepted(corporation, 'Corporation statud changed')
+    ok(corporation, 'Corporation statud changed')
   end
 
   def current
-    return forbidden('No corporation selected') unless Current.corporation
+    return unauthorized('No corporation selected') unless Current.corporation
 
     ok(Current.corporation, 'Corporation retrieved successfully')
   end
 
   def select
-    return forbidden unless Current.corporations.include?(corporation)
+    return unauthorized unless Current.corporations.include?(corporation)
 
     Current.corporation = corporation
     ok(Current.corporation.with_childs, 'Corporation setted successfully')
   end
 
   def items
-    return forbidden('No corporation selected') unless Current.corporation
+    return unauthorized('No corporation selected') unless Current.corporation
 
     ok(Item.currents_enabled)
   end
@@ -61,7 +61,7 @@ class CorporationsController < ApplicationController
   end
 
   def corporation
-    Corporation.find(params[:id])
+    @corporation ||= Corporation.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     not_found('Corporation') && return
   end

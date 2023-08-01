@@ -29,9 +29,9 @@ class ItemsController < ApplicationController
   private
 
   def item
-    Item.currents.find(params[:id])
+    @item ||= Item.currents.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    not_found('Item')
+    not_found
   end
 
   def item_params

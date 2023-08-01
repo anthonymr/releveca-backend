@@ -20,14 +20,12 @@ class ClientsController < ApplicationController
   end
 
   def update
-    return forbidden('Not allowed') if client.approved?
+    return unauthorized("Can't update approved client") if client.approved?
 
     client.update(client_params) ? ok(client, 'Client updated') : bad_request(client.errors)
   end
 
   def patch
-    return forbidden('Not allowed') unless client.approved?
-
     client.update(client_patch_params) ? ok(client, 'Client patched') : bad_request(client.errors)
   end
 
@@ -42,9 +40,9 @@ class ClientsController < ApplicationController
   private
 
   def client
-    Client.currents.find(params[:id])
+    @client ||= Client.currents.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    not_found('Client')
+    not_found
   end
 
   def client_params
