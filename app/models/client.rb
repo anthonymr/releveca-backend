@@ -10,8 +10,6 @@ class Client < ApplicationRecord
   validates :status, presence: true, length: { maximum: 50 }, inclusion: { in: %w[enabled disabled] }
   validates :notes, length: { maximum: 500 }
   validates :address, presence: true, length: { maximum: 500 }
-  validates :rif, presence: true, length: { maximum: 15 }, uniqueness: { scope: :corporation_id },
-                  format: { with: /\A[VEJPG]{1}[0-9]{5,9}\z/ }
   validates :taxpayer, inclusion: { in: [true, false] }
   validates :approval, inclusion: { in: [true, false] }
   validates :nit, length: { maximum: 15 }
@@ -19,6 +17,8 @@ class Client < ApplicationRecord
   validates :index, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :country_id, presence: true
   validates :user_id, presence: true
+  validates :rif, presence: true, length: { maximum: 15 }, uniqueness: { scope: :corporation_id },
+                  format: { with: /\A[VEJPG]{1}[0-9]{5,9}\z/ }
 
   def mine?
     user_id == Current.user.id
@@ -29,21 +29,21 @@ class Client < ApplicationRecord
   end
 
   class << self
-    def currents
+    def mine # currents
       Current.user&.clients
     end
 
-    def currents_search(str = nil)
-      return Client.currents unless str
+    def mine_filtered(str = nil) # currents_search
+      return Client.mine unless str
 
-      Client.currents.where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
+      Client.mine.where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
     end
 
-    def currents_page(page = nil, count = 10, str = '')
-      Paginate.call(Client.currents_search(str), page, count)
+    def mine_paginated(page = nil, count = 10, str = '') #currents_page
+      Paginate.call(Client.mine_filtered(str), page, count)
     end
 
-    def currents_enabled
+    def mine_enabled #currents_enabled
       Item.mine&.where(approval: true)
     end
   end

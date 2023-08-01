@@ -3,7 +3,7 @@ class ClientsController < ApplicationController
   before_action :check_user
 
   def index
-    ok(Client.currents_page(params[:page], params[:count], params[:filter]), 'Clients retrieved successfully')
+    ok(Client.mine_paginated(params[:page], params[:count], params[:filter]), 'Clients retrieved successfully')
   end
 
   def show
@@ -40,7 +40,7 @@ class ClientsController < ApplicationController
   private
 
   def client
-    @client ||= Client.currents.find(params[:id])
+    @client ||= Client.mine.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     not_found
   end

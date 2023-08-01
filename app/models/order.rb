@@ -59,7 +59,7 @@ class Order < ApplicationRecord
 
     order.user = Current.user
     order.corporation = Current.corporation
-    order.client = Client.currents.find(order_params[:client_id])
+    order.client = Client.mine.find(order_params[:client_id])
     order.currency = Currency.find(order_params[:currency_id])
     order.payment_condition = Current.payment_conditions.find(order_params[:payment_condition_id])
 
@@ -75,7 +75,7 @@ class Order < ApplicationRecord
   def self.update_with_references(order_params, id)
     order = Current.orders.find(id)
 
-    order.update(client: Client.currents.find(order_params[:client_id]))
+    order.update(client: Client.mine.find(order_params[:client_id]))
     order.update(currency: Currency.find(order_params[:currency_id]))
     order.update(payment_condition: Current.payment_conditions.find(order_params[:payment_condition_id]))
     order.balance = order_params[:total]
