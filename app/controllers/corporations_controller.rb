@@ -51,7 +51,7 @@ class CorporationsController < ApplicationController
   def items
     return unauthorized('No corporation selected') unless Current.corporation
 
-    ok(Item.currents_enabled)
+    ok(Item.mine_enabled)
   end
 
   private

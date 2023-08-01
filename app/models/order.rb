@@ -88,7 +88,7 @@ class Order < ApplicationRecord
   def add_details(details_params)
     details_params.each do |order_detail|
       new_detail = order_details.new(order_detail)
-      new_detail.item = Item.currents.find(order_detail[:item_id])
+      new_detail.item = Item.mine.find(order_detail[:item_id])
       new_detail.currency = Currency.find(order_detail[:currency_id])
       new_detail.unit_price = new_detail.item.price
       new_detail.total_price = new_detail.qty * new_detail.unit_price

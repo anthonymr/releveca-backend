@@ -44,7 +44,7 @@ class Client < ApplicationRecord
     end
 
     def currents_enabled
-      Item.currents&.where(approval: true)
+      Item.mine&.where(approval: true)
     end
   end
 end

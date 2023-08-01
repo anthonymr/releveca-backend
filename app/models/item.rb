@@ -12,22 +12,22 @@ class Item < ApplicationRecord
   validates :corporation, presence: true
 
   class << self
-    def currents
+    def mine # currents
       Current.corporation&.items
     end
 
-    def currents_search(str = '')
-      return Item.currents if str.empty?
+    def mine_filtered(str = '') # currents_search
+      return Item.mine if str.empty?
 
-      Item.currents.where('name ILIKE ? OR code ILIKE ?', "%#{str}%", "%#{str}%")
+      Item.mine.where('name ILIKE ? OR code ILIKE ?', "%#{str}%", "%#{str}%")
     end
 
-    def currents_page(page = nil, count = 12, str = '')
-      Paginate.call(Item.currents_search(str), page, count)
+    def mine_paginated(page = nil, count = 12, str = '') # currents_page
+      Paginate.call(Item.mine_filtered(str), page, count)
     end
 
-    def currents_enabled
-      Item.currents&.where(status: 'enabled')
+    def mine_enabled # currents_enabled
+      Item.mine&.where(status: 'enabled')
     end
   end
 end

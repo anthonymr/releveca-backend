@@ -1,4 +1,4 @@
-module HTTPResponses
+module HttpResponses
   extend ActiveSupport::Concern
 
   def unauthorized(message = 'Not authorized')
