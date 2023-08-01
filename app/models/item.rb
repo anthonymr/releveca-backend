@@ -1,6 +1,4 @@
 class Item < ApplicationRecord
-  extend Paginable
-
   belongs_to :corporation
   has_many :order_details, dependent: :restrict_with_error
 
@@ -25,7 +23,7 @@ class Item < ApplicationRecord
     end
 
     def currents_page(page = nil, count = 12, str = '')
-      Item.paginate(Item.currents_search(str), page, count)
+      Paginate.call(Item.currents_search(str), page, count)
     end
 
     def currents_enabled

@@ -1,6 +1,4 @@
 class Current < ActiveSupport::CurrentAttributes
-  include ::Paginable
-
   attribute :user
 
   def corporation

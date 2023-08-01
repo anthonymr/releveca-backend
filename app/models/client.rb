@@ -1,6 +1,4 @@
 class Client < ApplicationRecord
-  extend Paginable
-
   belongs_to :user
   belongs_to :corporation
   has_many :orders, dependent: :restrict_with_error
@@ -42,7 +40,7 @@ class Client < ApplicationRecord
     end
 
     def currents_page(page = nil, count = 10, str = '')
-      Client.paginate(Client.currents_search(str), page, count)
+      Paginate.call(Client.currents_search(str), page, count)
     end
 
     def currents_enabled
