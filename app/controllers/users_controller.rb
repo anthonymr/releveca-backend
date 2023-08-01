@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   def update
     return ok(Current.user.no_password, 'User updated') if Current.user.update(user_params)
 
-    return unprocessable_entity(Current.user)
+    unprocessable_entity(Current.user)
   end
 
   def change_status
