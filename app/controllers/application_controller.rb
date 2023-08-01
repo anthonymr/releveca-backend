@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   include JwtToken
   include Authenticable
-  include Responses
+  include HTTPResponses
   include Validations
 
   before_action :authenticate_user
