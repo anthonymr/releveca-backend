@@ -29,21 +29,30 @@ class Client < ApplicationRecord
   end
 
   class << self
-    def mine # currents
+    def new_with_references(params)
+      new_client = Client.new(params)
+      new_client.status = 'enabled'
+      new_client.approval = false
+      new_client.user_id = Current.user.id
+      new_client.corporation = Current.corporation
+      new_client
+    end
+
+    def mine
       Current.user&.clients
     end
 
-    def mine_filtered(str = nil) # currents_search
+    def mine_filtered(str = nil)
       return Client.mine unless str
 
       Client.mine.where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
     end
 
-    def mine_paginated(page = nil, count = 10, str = '') #currents_page
+    def mine_paginated(page = nil, count = 10, str = '')
       Paginate.call(Client.mine_filtered(str), page, count)
     end
 
-    def mine_enabled #currents_enabled
+    def mine_enabled
       Item.mine&.where(approval: true)
     end
   end

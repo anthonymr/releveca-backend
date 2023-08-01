@@ -11,11 +11,7 @@ class ClientsController < ApplicationController
   end
 
   def create
-    new_client = Client.new(client_params)
-    new_client.status = 'enabled'
-    new_client.approval = false
-    new_client.user_id = Current.user.id
-    new_client.corporation = Current.corporation
+    new_client = Client.new_with_references(client_params)
     new_client.save ? ok(new_client, 'Client created') : bad_request(new_client.errors)
   end
 
