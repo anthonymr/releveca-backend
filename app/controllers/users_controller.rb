@@ -6,7 +6,18 @@ class UsersController < ApplicationController
   end
 
   def show
-    ok(Current.user.no_password, 'User retrieved successfully')
+    user = User.find(params['id'])
+    ok(user.no_password, 'User retrieved successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found
+  end
+
+  def current
+    if Current.user
+      ok(Current.user.no_password, 'User retrieved successfully')
+    else
+      unauthorized
+    end
   end
 
   def create
