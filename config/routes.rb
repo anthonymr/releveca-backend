@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   scope :api do
     scope :v1 do
       get 'users/corporations', to: 'users#corporations', as: 'user_corporations'
+      get 'users/current', to: 'users#current', as: 'current_user'
       post 'users/corporations', to: 'users#add_corporation', as: 'user_add_corporation'
       put 'users', to: 'users#update', as: 'current_user_update'
       patch 'users/:id/status', to: 'users#change_status', as: 'user_change_status'
