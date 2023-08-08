@@ -8,7 +8,7 @@ FactoryBot.define do
   end
 
   factory :currency do
-    code { Faker::Name.first_name }
+    code { Faker::Code.sin }
     description { Faker::Name.first_name }
     rate { 1 }
   end
