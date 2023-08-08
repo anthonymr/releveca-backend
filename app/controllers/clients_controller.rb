@@ -12,25 +12,45 @@ class ClientsController < ApplicationController
 
   def create
     new_client = Client.new_with_references(client_params)
-    new_client.save ? ok(new_client, 'Client created') : bad_request(new_client.errors)
+    if new_client.save
+      ok(new_client, 'Client created')
+    else
+      bad_request(new_client.errors)
+    end
   end
 
   def update
     return unauthorized("Can't update approved client") if client.approved?
 
-    client.update(client_params) ? ok(client, 'Client updated') : bad_request(client.errors)
+    if client.update(client_params)
+      ok(client, 'Client updated')
+    else
+      bad_request(client.errors)
+    end
   end
 
   def patch
-    client.update(client_patch_params) ? ok(client, 'Client patched') : bad_request(client.errors)
+    if client.update(client_patch_params)
+      ok(client, 'Client patched')
+    else
+      bad_request(client.errors)
+    end
   end
 
   def change_status
-    client.update(status: params[:status]) ? ok(client, 'Client status changed') : bad_request(client.errors)
+    if client.update(status: params[:status])
+      ok(client, 'Client status changed')
+    else
+      bad_request(client.errors)
+    end
   end
 
   def change_approval
-    client.update(approval: params[:approval]) ? ok(client, 'Client approval changed') : bad_request(client.errors)
+    if client.update(approval: params[:approval])
+      ok(client, 'Client approval changed')
+    else
+      bad_request(client.errors)
+    end
   end
 
   private
@@ -38,7 +58,7 @@ class ClientsController < ApplicationController
   def client
     @client ||= Client.mine.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    not_found
+    not_found('Client')
   end
 
   def client_params
