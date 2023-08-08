@@ -22,4 +22,15 @@ FactoryBot.define do
     default_currency { FactoryBot.create(:currency) }
     base_currency { FactoryBot.create(:currency) }
   end
+
+  factory :item do
+    code { Faker::Code.sin }
+    name { Faker::Name.first_name }
+    model { Faker::Name.last_name }
+    stock { Faker::Number.number(digits: 3) }
+    unit { Faker::Number.number(digits: 2) }
+    price { Faker::Number.decimal(l_digits: 2) }
+    index { Faker::Number.number(digits: 2) }
+    corporation { FactoryBot.create(:corporation) }
+  end
 end
