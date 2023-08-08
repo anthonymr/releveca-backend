@@ -3,8 +3,7 @@ class AuthenticationController < ApplicationController
 
   def create
     user = User.find_by(user_name: params[:user_name])
-    return invalid_login('Usuario o contraseña inválidos') unless user
-    return invalid_login('Usuario o contraseña inválidos') unless user.authenticate(params[:password])
+    return invalid_login('Usuario o contraseña inválidos') unless user&.authenticate(params[:password])
     return invalid_login('Usuario deshabilitado, contacte a un administrador') unless user.enable?
 
     token = jwt_encode({ user_id: user.id })

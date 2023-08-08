@@ -3,6 +3,4 @@ class ApplicationController < ActionController::API
   include Authenticable
   include HttpResponses
   include Validations
-
-  before_action :authenticate_user
 end
