@@ -20,6 +20,13 @@ class Client < ApplicationRecord
   validates :rif, presence: true, length: { maximum: 15 }, uniqueness: { scope: :corporation_id },
                   format: { with: /\A[VEJPG]{1}[0-9]{5,9}\z/ }
 
+  after_initialize do
+    self.status ||= 'enabled'
+    self.approval ||= false
+    self.user ||= Current.user
+    self.cporporation = Current.corporation
+  end
+
   def mine?
     user_id == Current.user.id
   end
@@ -29,15 +36,6 @@ class Client < ApplicationRecord
   end
 
   class << self
-    def new_with_references(params)
-      new_client = Client.new(params)
-      new_client.status = 'enabled'
-      new_client.approval = false
-      new_client.user_id = Current.user.id
-      new_client.corporation = Current.corporation
-      new_client
-    end
-
     def mine
       Current.user&.clients
     end
@@ -46,14 +44,6 @@ class Client < ApplicationRecord
       return Client.mine unless str
 
       Client.mine.where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
-    end
-
-    def mine_paginated(page = nil, count = 10, str = '')
-      PaginationService.call(Client.mine_filtered(str), page, count)
-    end
-
-    def mine_enabled
-      Item.mine&.where(approval: true)
     end
   end
 end

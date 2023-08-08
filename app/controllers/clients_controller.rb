@@ -3,7 +3,9 @@ class ClientsController < ApplicationController
   before_action :check_user
 
   def index
-    ok(Client.mine_paginated(params[:page], params[:count], params[:filter]), 'Clients retrieved successfully')
+    filtered_clients = Client.mine_filtered(params[:filter])
+    paginated_clients = PaginationService.call(filtered_clients, params[:page], params[:count])
+    ok(paginated_clients, 'Clients retrieved successfully')
   end
 
   def show
@@ -11,7 +13,7 @@ class ClientsController < ApplicationController
   end
 
   def create
-    new_client = Client.new_with_references(client_params)
+    new_client = Client.new(client_params)
     if new_client.save
       ok(new_client, 'Client created')
     else
