@@ -9,7 +9,6 @@ class CorporationsController < ApplicationController
 
   def create
     new_corporation = Corporation.new(corporation_params)
-
     new_corporation.base_currency = Currency.find(params[:base_currency_id])
     new_corporation.default_currency = Currency.find(params[:default_currency_id])
 

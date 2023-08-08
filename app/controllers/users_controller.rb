@@ -47,7 +47,8 @@ class UsersController < ApplicationController
   end
 
   def corporations
-    check_corporation
+    return unless check_corporation
+
     ok(Current.user.corporations, 'Corporations retrieved successfully')
   end
 

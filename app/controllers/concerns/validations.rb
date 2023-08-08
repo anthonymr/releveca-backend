@@ -4,10 +4,16 @@ module Validations
   private
 
   def check_corporation
-    return forbidden('First select a corporation') unless Current.corporation
+    return true if Current.corporation
+
+    unauthorized('First select a corporation')
+    false
   end
 
   def check_user
-    return forbidden('First login') unless Current.user
+    return true if Current.user
+
+    unauthorized('First login')
+    false
   end
 end

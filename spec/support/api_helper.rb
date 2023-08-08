@@ -16,10 +16,17 @@ module ApiHelpers
   end
 
   def simulate_login
-    user = User.create(name: 'example user', last_name: 'test', user_name: 'username', password: 'password', email: 'example@mail.com')
-    user.update(status: 'enabled')
+    @user = User.create(name: 'example user', last_name: 'test', user_name: 'username', password: 'password', email: 'example@mail.com')
+    @user.update(status: 'enabled')
     params = { user_name: 'username', password: 'password' }
     post(auth_path, params:)
     JSON.parse(response.body)['payload']['token']
+  end
+
+  def select_corporation(token)
+    corporation = FactoryBot.create(:corporation)
+    @user.corporations << corporation
+    post(select_corporation_path, as: :json, headers: { Authorization: token }, params: { id: corporation.id })
+    corporation
   end
 end
