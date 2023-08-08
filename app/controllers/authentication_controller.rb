@@ -6,7 +6,7 @@ class AuthenticationController < ApplicationController
     return invalid_login('Usuario o contraseña inválidos') unless user&.authenticate(params[:password])
     return invalid_login('Usuario deshabilitado, contacte a un administrador') unless user.enable?
 
-    token = jwt_encode({ user_id: user.id })
+    token = JwtService.encode({ user_id: user.id })
     ok({ token: }, 'Logged in')
   end
 
