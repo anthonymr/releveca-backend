@@ -18,10 +18,6 @@ class CorporationsController < ApplicationController
 
   def update
     return unauthorized('No corporation selected') unless Current.corporation
-
-    Current.corporation.base_currency = Currency.find(params[:base_currency_id])
-    Current.corporation.default_currency = Currency.find(params[:default_currency_id])
-
     return unprocessable_entity(Current.corporation) unless Current.corporation.update(corporation_params)
 
     ok(Current.corporation, 'Corporation updated successfully')
