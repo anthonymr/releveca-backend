@@ -15,6 +15,18 @@ module ApiHelpers
     }
   end
 
+  def new_corporation_params(currency)
+    {
+      name: Faker::Company.name,
+      rif: "J#{Faker::Number.number(digits: 9)}",
+      address: Faker::Address.full_address,
+      phone: Faker::Number.number(digits: 9),
+      email: Faker::Internet.email,
+      base_currency_id: currency.id,
+      default_currency_id: currency.id
+    }
+  end
+
   def simulate_login
     @user = User.create(name: 'example user', last_name: 'test', user_name: 'username', password: 'password', email: 'example@mail.com')
     @user.update(status: 'enabled')

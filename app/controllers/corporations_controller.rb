@@ -8,13 +8,12 @@ class CorporationsController < ApplicationController
   end
 
   def create
-    new_corporation = Corporation.new(corporation_params)
-    new_corporation.base_currency = Currency.find(params[:base_currency_id])
-    new_corporation.default_currency = Currency.find(params[:default_currency_id])
-
-    return unprocessable_entity(new_corporation) unless new_corporation.save
-
-    ok(new_corporation, 'Corporation created successfully')
+    new_corporation = Corporation.create(corporation_params)
+    if new_corporation.persisted?
+      created(new_corporation)
+    else
+      unprocessable_entity(new_corporation)
+    end
   end
 
   def update
