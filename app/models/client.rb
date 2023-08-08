@@ -49,7 +49,7 @@ class Client < ApplicationRecord
     end
 
     def mine_paginated(page = nil, count = 10, str = '')
-      Paginate.call(Client.mine_filtered(str), page, count)
+      PaginationService.call(Client.mine_filtered(str), page, count)
     end
 
     def mine_enabled

@@ -1,4 +1,4 @@
-class Paginate < ApplicationService
+class PaginationService < ApplicationService
   def initialize(items = [], page = 0, count = 10)
     super()
     @items = items
