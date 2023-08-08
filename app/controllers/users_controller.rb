@@ -6,10 +6,9 @@ class UsersController < ApplicationController
   end
 
   def show
-    user = User.find(params['id'])
-    ok(user.no_password, 'User retrieved successfully')
+    ok(user&.no_password, 'User retrieved successfully')
   rescue ActiveRecord::RecordNotFound
-    not_found
+    not_found('User')
   end
 
   def current
@@ -22,38 +21,55 @@ class UsersController < ApplicationController
 
   def create
     new_user = User.new(user_params)
-    new_user.save ? created(new_user.no_password, 'User created') : unprocessable_entity(new_user)
+    if new_user.save
+      created(new_user.no_password, 'User created')
+    else
+      unprocessable_entity(new_user)
+    end
   end
 
   def update
-    return ok(Current.user.no_password, 'User updated') if Current.user.update(user_params)
-
-    unprocessable_entity(Current.user)
+    if Current.user.update(user_params)
+      ok(Current.user.no_password, 'User updated')
+    else
+      unprocessable_entity(Current.user)
+    end
   end
 
   def change_status
-    user = User.find(params[:id])
-    user.update(status: params[:status]) ? ok(user.no_password, 'User updated') : unprocessable_entity(user)
+    if user.update(status: params[:status])
+      ok(user.no_password, 'User updated')
+    else
+      unprocessable_entity(user)
+    end
   rescue ActiveRecord::RecordNotFound
-    not_found
+    not_found('User')
   end
 
   def corporations
+    check_corporation
     ok(Current.user.corporations, 'Corporations retrieved successfully')
   end
 
   def add_corporation
-    corporation = Corporation.find(params[:id])
     return unauthorized unless corporation&.enabled?
-    return unauthorized if Current.user.corporations.include?(corporation)
+    return unauthorized if corporation&.mine?
 
     Current.user.corporations << corporation
-    ok(Current.user.no_password, 'Corporation added successfully')
+    ok(corporation, 'Corporation added successfully')
   rescue ActiveRecord::RecordNotFound
     not_found('Corporation')
   end
 
   private
+
+  def corporation
+    @corporation ||= Corporation.find(params[:id])
+  end
+
+  def user
+    @user ||= User.find(params[:id])
+  end
 
   def user_params
     params.permit(:name, :last_name, :user_name, :email, :password)

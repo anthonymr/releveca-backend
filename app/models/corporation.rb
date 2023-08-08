@@ -26,6 +26,10 @@ class Corporation < ApplicationRecord
     status == 'enabled'
   end
 
+  def mine?
+    Current.user.corporations.include?(self)
+  end
+
   def with_childs
     attributes.merge(
       base_currency: base_currency.attributes,
