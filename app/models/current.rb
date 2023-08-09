@@ -18,6 +18,20 @@ class Current < ActiveSupport::CurrentAttributes
   end
 
   def orders
-    corporation&.orders&.where(user:)
+    orders = corporation&.orders&.where(user:)&.includes(:client, :currency, :payment_condition, :order_details)
+
+    orders.map(&:with_relations)
+  end
+
+  def orders_with_debt
+    orders = corporation&.orders&.where(user:)&.includes(:client, :currency, :payment_condition, :order_details)
+
+    orders.map(&:with_relations).select { |order| order['balance'].positive? }
+  end
+
+  def orders_pending
+    orders = corporation&.orders&.where(user:)&.includes(:client, :currency, :payment_condition, :order_details)
+
+    orders.map(&:with_relations).select { |order| order['approved'] == false }
   end
 end

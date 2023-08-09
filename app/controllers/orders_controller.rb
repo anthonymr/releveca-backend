@@ -12,6 +12,14 @@ class OrdersController < ApplicationController
     not_found('Order')
   end
 
+  def pending
+    ok(Current.orders_pending, 'Pending orders retrieved successfully')
+  end
+
+  def with_debt
+    ok(Current.orders_with_debt, 'Orders with debt retrieved successfully')
+  end
+
   def create
     new_order = Order.new_with_initials(order_params)
     new_order.add_details(order_params[:order_details])
