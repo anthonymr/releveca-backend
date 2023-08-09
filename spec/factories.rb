@@ -14,8 +14,8 @@ FactoryBot.define do
   end
 
   factory :corporation do
-    name { "#{Faker::Name.first_name}_test" }
-    rif { "J#{Faker::Number.number(digits: 9)}" }
+    name { "#{Faker::Name.unique.first_name}_test" }
+    rif { "J#{Faker::Number.unique.number(digits: 9)}" }
     address { Faker::Address.full_address }
     phone { Faker::PhoneNumber.cell_phone }
     email { Faker::Internet.email }
