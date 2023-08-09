@@ -10,6 +10,14 @@ class Item < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :index, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
   validates :corporation, presence: true
+  validates :status, presence: true, inclusion: { in: %w[enabled disabled] }
+
+  before_validation :set_defaults
+
+  def set_defaults
+    self.stock ||= 0
+    self.status ||= 'enabled'
+  end
 
   class << self
     def mine
