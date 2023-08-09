@@ -27,7 +27,7 @@ class OrdersController < ApplicationController
 
   def update
     order = Order.update_with_references(order_params, params[:id])
-    
+
     if order.update(order_params)
       ok(order, 'Order updated successfully')
     else
@@ -83,6 +83,7 @@ class OrdersController < ApplicationController
       :taxes,
       :total,
       :status,
+      :order,
       order_details: %i[
         qty
         item_id

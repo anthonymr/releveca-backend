@@ -37,7 +37,7 @@ class Client < ApplicationRecord
 
   class << self
     def mine
-      Current.user&.clients
+      Current.user&.clients&.where(corporation_id: Current.corporation.id)
     end
 
     def mine_filtered(str = nil)

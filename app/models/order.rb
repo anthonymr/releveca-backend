@@ -68,8 +68,6 @@ class Order < ApplicationRecord
     order.status = 'creado'
 
     order
-  rescue ActiveRecord::RecordNotFound
-    raise ActiveRecord::RecordNotFound, 'Client or payment condition not found'
   end
 
   def self.update_with_references(order_params, id)
@@ -96,6 +94,7 @@ class Order < ApplicationRecord
     end
   rescue ActiveRecord::RecordNotFound
     not_found('Item or currency')
+    raise
   end
 
   def with_relations
