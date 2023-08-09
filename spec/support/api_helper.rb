@@ -41,4 +41,8 @@ module ApiHelpers
     post(select_corporation_path, as: :json, headers: { Authorization: token }, params: { id: corporation.id })
     corporation
   end
+
+  def header_builder(token)
+    { Authorization: token }
+  end
 end
