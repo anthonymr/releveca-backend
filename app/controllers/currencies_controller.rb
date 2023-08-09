@@ -5,22 +5,34 @@ class CurrenciesController < ApplicationController
 
   def show
     ok(currency, 'Currency retrieved successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Currency')
   end
 
   def create
     new_currency = Currency.new(currency_params)
-    new_currency.save ? ok(new_currency, 'Currency created') : bad_request(new_currency.errors)
+
+    if new_currency.save
+      ok(new_currency, 'Currency created')
+    else
+      bad_request(new_currency.errors)
+    end
   end
 
   def update
-    currency.update(currency_params) ? ok(currency, 'Currency updated') : bad_request(currency.errors)
+    if currency.update(currency_params)
+      ok(currency, 'Currency updated')
+    else
+      bad_request(currency.errors)
+    end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Currency')
   end
 
   def destroy
-    to_delete = Currency.find(params[:id])
-    ok(to_delete, 'Currency deleted') if to_delete.destroy
+    ok(currency, 'Currency deleted') if currency.destroy
   rescue ActiveRecord::RecordNotFound
-    not_found
+    not_found('Currency')
   end
 
   private
@@ -31,7 +43,5 @@ class CurrenciesController < ApplicationController
 
   def currency
     @currency ||= Currency.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    not_found
   end
 end

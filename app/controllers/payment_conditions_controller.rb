@@ -6,37 +6,52 @@ class PaymentConditionsController < ApplicationController
   end
 
   def show
-    payment_condition = Current.payment_conditions.find(params[:id])
-    return unauthorized('payment_condition not found') unless payment_condition.allowed?
-
-    ok(payment_condition, 'payment_condition retrieved successfully')
+    if payment_condition.mine?
+      ok(payment_condition, 'payment_condition retrieved successfully')
+    else
+      not_found('payment_condition')
+    end
+  rescue ActiveRecord::RecordNotFound
+    not_found('payment_condition')
   end
 
   def create
-    payment_condition = PaymentCondition.new(payment_condition_params)
-    payment_condition.corporation = Current.corporation
-    return unauthorized('payment_condition not valid') unless payment_condition.save
+    new_payment_condition = PaymentCondition.new(payment_condition_params)
+    new_payment_condition.corporation = Current.corporation
 
-    ok(payment_condition, 'payment_condition created successfully')
+    if new_payment_condition.save
+      ok(payment_condition, 'payment_condition created successfully')
+    else
+      unauthorized('payment_condition not valid')
+    end
   end
 
   def update
-    payment_condition = Current.payment_conditions.find(params[:id])
-    return unauthorized('payment_condition not found') unless payment_condition.allowed?
-    return unauthorized('payment_condition not valid') unless payment_condition.update(payment_condition_params)
+    return unauthorized('payment_condition not found') unless payment_condition.mine?
 
-    ok(payment_condition, 'payment_condition updated successfully')
+    if payment_condition.update(payment_condition_params)
+      ok(payment_condition, 'payment_condition updated successfully')
+    else
+      unauthorized('payment_condition not valid') 
+    end
+  rescue ActiveRecord::RecordNotFound
+    not_found('payment_condition')
   end
 
   def destroy
-    payment_condition = Current.payment_conditions.find(params[:id])
-    return unauthorized('payment_condition not found') unless payment_condition.allowed?
+    return unauthorized('payment_condition not found') unless payment_condition.mine?
 
     payment_condition.destroy
     ok(payment_condition, 'payment_condition destroyed successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found('payment_condition')
   end
 
   private
+
+  def payment_condition
+    @payment_condition ||= Current.payment_conditions.find(params[:id])
+  end
 
   def payment_condition_params
     params.require(:payment_condition).permit(:code, :description, :days, :index)

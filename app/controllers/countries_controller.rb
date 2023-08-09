@@ -5,9 +5,11 @@ class CountriesController < ApplicationController
 
   def create
     country = Country.new(country_params)
-    return ok(country, 'Country created') if country.save
-
-    unprocessable_entity(country)
+    if country.save
+      ok(country, 'Country created')
+    else
+      unprocessable_entity(country)
+    end
   end
 
   def destroy

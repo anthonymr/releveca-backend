@@ -15,23 +15,40 @@ class ItemsController < ApplicationController
 
   def create
     new_item = Item.mine.new(item_params)
-    new_item.save ? ok(new_item, 'Item created successfully') : bad_request(new_item.errors)
+
+    if new_item.save
+      ok(new_item, 'Item created successfully')
+    else
+      bad_request(new_item.errors)
+    end
   end
 
   def update
-    item.update(item_params) ? ok(item, 'Item updated successfully') : bad_request(item.errors)
+    if item.update(item_params)
+      ok(item, 'Item updated successfully')
+    else
+      bad_request(item.errors)
+    end
   rescue ActiveRecord::RecordNotFound
     not_found
   end
 
   def change_status
-    item.update(status: params[:status]) ? ok(item, 'Item status changed successfully') : bad_request(item.errors)
+    if item.update(status: params[:status])
+      ok(item, 'Item status changed successfully')
+    else
+      bad_request(item.errors)
+    end
   rescue ActiveRecord::RecordNotFound
     not_found
   end
 
   def change_stock
-    item.update(stock: params[:stock]) ? ok(item, 'Item stock changed successfully') : bad_request(item.errors)
+    if item.update(stock: params[:stock])
+      ok(item, 'Item stock changed successfully')
+    else
+      bad_request(item.errors)
+    end
   rescue ActiveRecord::RecordNotFound
     not_found
   end

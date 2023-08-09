@@ -94,6 +94,8 @@ class Order < ApplicationRecord
       new_detail.total_price = new_detail.qty * new_detail.unit_price
       new_detail.save!
     end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Item or currency')
   end
 
   def with_relations

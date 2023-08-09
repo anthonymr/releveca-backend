@@ -8,6 +8,8 @@ class OrdersController < ApplicationController
 
   def show
     ok(Current.orders.find(params[:id]).with_relations, 'Order retrieved successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Order')
   end
 
   def create
@@ -25,6 +27,7 @@ class OrdersController < ApplicationController
 
   def update
     order = Order.update_with_references(order_params, params[:id])
+    
     if order.update(order_params)
       ok(order, 'Order updated successfully')
     else

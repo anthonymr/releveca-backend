@@ -4,7 +4,9 @@ class CorporationsController < ApplicationController
   end
 
   def show
-    ok(corporation, 'Corporation retrieved successfully')
+    ok(corporation.with_childs, 'Corporation retrieved successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Corporation')
   end
 
   def create
@@ -18,15 +20,22 @@ class CorporationsController < ApplicationController
 
   def update
     return unauthorized('No corporation selected') unless Current.corporation
-    return unprocessable_entity(Current.corporation) unless Current.corporation.update(corporation_params)
 
-    ok(Current.corporation, 'Corporation updated successfully')
+    if Current.corporation.update(corporation_params)
+      ok(Current.corporation, 'Corporation updated successfully')
+    else
+      unprocessable_entity(Current.corporation)
+    end
   end
 
   def change_status
-    return unprocessable_entity(corporation) unless corporation.update(status: params[:status])
-
-    ok(corporation, 'Corporation statud changed')
+    if corporation.update(status: params[:status])
+      ok(corporation, 'Corporation statud changed')
+    else
+      unprocessable_entity(corporation)
+    end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Corporation')
   end
 
   def current
@@ -40,6 +49,8 @@ class CorporationsController < ApplicationController
 
     Current.corporation = corporation
     ok(Current.corporation.with_childs, 'Corporation setted successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Corporation')
   end
 
   def items
@@ -56,7 +67,5 @@ class CorporationsController < ApplicationController
 
   def corporation
     @corporation ||= Corporation.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    not_found('Corporation') && return
   end
 end

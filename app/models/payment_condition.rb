@@ -8,7 +8,7 @@ class PaymentCondition < ApplicationRecord
   validates :index, numericality: { only_integer: true }, allow_nil: true
   validates :corporation, presence: true
 
-  def allowed?
+  def mine?
     corporation == Current.corporation
   end
 end

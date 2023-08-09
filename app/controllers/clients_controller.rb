@@ -10,6 +10,8 @@ class ClientsController < ApplicationController
 
   def show
     ok(client, 'Client retrieved successfully')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Client')
   end
 
   def create
@@ -29,6 +31,8 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Client')
   end
 
   def patch
@@ -37,6 +41,8 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Client')
   end
 
   def change_status
@@ -45,6 +51,8 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Client')
   end
 
   def change_approval
@@ -53,14 +61,14 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
+  rescue ActiveRecord::RecordNotFound
+    not_found('Client')
   end
 
   private
 
   def client
     @client ||= Client.mine.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    not_found('Client')
   end
 
   def client_params
