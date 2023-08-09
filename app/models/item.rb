@@ -17,13 +17,10 @@ class Item < ApplicationRecord
     end
 
     def mine_filtered(str = '')
+      str ||= ''
       return Item.mine if str.empty?
 
       Item.mine.where('name ILIKE ? OR code ILIKE ?', "%#{str}%", "%#{str}%")
-    end
-
-    def mine_paginated(page = nil, count = 12, str = '')
-      PaginationService.call(Item.mine_filtered(str), page, count)
     end
 
     def mine_enabled

@@ -24,8 +24,8 @@ FactoryBot.define do
   end
 
   factory :item do
-    code { Faker::Code.sin }
-    name { Faker::Name.first_name }
+    code { Faker::Code.unique.sin }
+    name { Faker::Code.unique.sin }
     model { Faker::Name.last_name }
     stock { Faker::Number.number(digits: 3) }
     unit { Faker::Number.number(digits: 2) }

@@ -1,9 +1,9 @@
 class PaginationService < ApplicationService
   def initialize(items = [], page = 0, count = 10)
     super()
-    @items = items
-    @page = page
-    @count = count
+    @items = items || []
+    @page = page || 0
+    @count = count || 10
   end
 
   def call

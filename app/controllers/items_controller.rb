@@ -2,7 +2,9 @@ class ItemsController < ApplicationController
   before_action :check_corporation
 
   def index
-    ok(Item.mine_paginated(params[:page], params[:count], params[:filter]), 'Items retrieved successfully')
+    filtered_items = Item.mine_filtered(params[:filter])
+    paginated_items = PaginationService.call(filtered_items, params[:page], params[:count])
+    ok(paginated_items, 'Items retrieved successfully')
   end
 
   def show
