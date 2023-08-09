@@ -1,6 +1,7 @@
 class Client < ApplicationRecord
   belongs_to :user
   belongs_to :corporation
+  belongs_to :country
   has_many :orders, dependent: :restrict_with_error
 
   validates :code, presence: true, length: { maximum: 50 }, uniqueness: { scope: :corporation_id }
@@ -24,7 +25,6 @@ class Client < ApplicationRecord
     self.status ||= 'enabled'
     self.approval ||= false
     self.user ||= Current.user
-    self.cporporation = Current.corporation
   end
 
   def mine?

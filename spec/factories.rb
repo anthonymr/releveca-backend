@@ -33,4 +33,24 @@ FactoryBot.define do
     index { Faker::Number.number(digits: 2) }
     corporation { FactoryBot.create(:corporation) }
   end
+
+  factory :country do
+    name { Faker::Alphanumeric.unique.alpha(number: 10).upcase }
+  end
+
+  factory :client do
+    code { Faker::Code.unique.sin }
+    name { Faker::Name.unique.name }
+    rif { "J#{Faker::Number.unique.number(digits: 9)}" }
+    client_type { 1 }
+    phone { Faker::PhoneNumber.cell_phone }
+    notes { Faker::Lorem.sentence }
+    address { Faker::Address.full_address }
+    taxpayer { true }
+    email { Faker::Internet.email }
+    index { Faker::Number.number(digits: 2) }
+    corporation { FactoryBot.create(:corporation) }
+    user { FactoryBot.create(:user) }
+    country { FactoryBot.create(:country) }
+  end
 end
