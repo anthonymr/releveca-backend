@@ -55,7 +55,7 @@ class Order < ApplicationRecord
   end
 
   def self.new_with_initials(order_params)
-    order = Current.orders.new(order_params.except(:order_details))
+    order = Current.raw_orders.new(order_params.except(:order_details))
 
     order.user = Current.user
     order.corporation = Current.corporation
@@ -71,7 +71,7 @@ class Order < ApplicationRecord
   end
 
   def self.update_with_references(order_params, id)
-    order = Current.orders.find(id)
+    order = Current.raw_orders.find(id)
 
     order.update(client: Client.mine.find(order_params[:client_id]))
     order.update(currency: Currency.find(order_params[:currency_id]))

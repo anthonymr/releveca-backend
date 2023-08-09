@@ -57,22 +57,29 @@ class OrdersController < ApplicationController
     order = Current.orders.find(params[:id])
     order.next_status!
     ok(order, 'Order status changed successfully to next')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Order')
   end
 
   def change_status_previous
-    order = Current.orders.find(params[:id])
+    order = Current.raw_orders.find(params[:id])
     order.previous_status!
     ok(order, 'Order status changed successfully to previous')
+  rescue ActiveRecord::RecordNotFound
+    not_found('Order')
   end
 
   def change_approval
-    order = Current.orders.find(params[:id])
+    order = Current.raw_orders.find(params[:id])
 
     if order.update(approved: params[:approved])
       ok(order, 'Order approval changed successfully')
     else
       unprocessable_entity(order)
     end
+
+  rescue ActiveRecord::RecordNotFound
+    not_found('Order')
   end
 
   def history

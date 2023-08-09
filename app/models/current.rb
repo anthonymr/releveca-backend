@@ -17,6 +17,10 @@ class Current < ActiveSupport::CurrentAttributes
     corporation&.payment_conditions
   end
 
+  def raw_orders
+    corporation&.orders&.where(user:)
+  end
+
   def orders
     orders = corporation&.orders&.where(user:)&.includes(:client, :currency, :payment_condition, :order_details)
 
