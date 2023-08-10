@@ -22,7 +22,7 @@ class User < ApplicationRecord
     status == 'enabled'
   end
 
-  def self.all_no_password
+  def self.no_password
     select(:id, :name, :last_name, :user_name, :email)
   end
 end

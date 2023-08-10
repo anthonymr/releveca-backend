@@ -1,14 +1,15 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate_user, only: :create
+  before_action :check_user, except: :create
+
+  rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
 
   def index
-    ok(User.all_no_password, 'Users retrieved successfully')
+    ok(User.all.no_password, 'Users retrieved successfully')
   end
 
   def show
     ok(user&.no_password, 'User retrieved successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('User')
   end
 
   def current
@@ -42,8 +43,6 @@ class UsersController < ApplicationController
     else
       unprocessable_entity(user)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('User')
   end
 
   def corporations
@@ -58,8 +57,6 @@ class UsersController < ApplicationController
 
     Current.user.corporations << corporation
     ok(corporation, 'Corporation added successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Corporation')
   end
 
   private
