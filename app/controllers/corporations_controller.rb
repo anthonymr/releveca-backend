@@ -49,7 +49,7 @@ class CorporationsController < ApplicationController
   end
 
   def items
-    ok(Item.mine_enabled)
+    ok(Item.mine.enabled)
   end
 
   private

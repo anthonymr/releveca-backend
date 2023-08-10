@@ -12,11 +12,9 @@ class Item < ApplicationRecord
   validates :corporation, presence: true
   validates :status, presence: true, inclusion: { in: %w[enabled disabled] }
 
-  before_validation :set_defaults
-
-  def set_defaults
-    self.stock ||= 0
-    self.status ||= 'enabled'
+  after_initialize do |new_item|
+    new_item.stock ||= 0
+    new_item.status = 'enabled'
   end
 
   class << self
@@ -24,15 +22,13 @@ class Item < ApplicationRecord
       Current.corporation&.items
     end
 
-    def mine_filtered(str = '')
+    def search(str = '')
       str ||= ''
-      return Item.mine if str.empty?
-
-      Item.mine.where('name ILIKE ? OR code ILIKE ?', "%#{str}%", "%#{str}%")
+      where('name ILIKE ? OR code ILIKE ?', "%#{str}%", "%#{str}%")
     end
 
-    def mine_enabled
-      Item.mine&.where(status: 'enabled')
+    def enabled
+      where(status: 'enabled')
     end
   end
 end

@@ -1,16 +1,17 @@
 class ItemsController < ApplicationController
+  before_action :check_user
   before_action :check_corporation
 
+  rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
+
   def index
-    filtered_items = Item.mine_filtered(params[:filter])
+    filtered_items = Item.mine.search(params[:filter])
     paginated_items = PaginationService.call(filtered_items, params[:page], params[:count])
     ok(paginated_items, 'Items retrieved successfully')
   end
 
   def show
     ok(item, 'Item retrieved successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found
   end
 
   def create
@@ -29,8 +30,6 @@ class ItemsController < ApplicationController
     else
       bad_request(item.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found
   end
 
   def change_status
@@ -39,8 +38,6 @@ class ItemsController < ApplicationController
     else
       bad_request(item.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found
   end
 
   def change_stock
@@ -49,8 +46,6 @@ class ItemsController < ApplicationController
     else
       bad_request(item.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found
   end
 
   private

@@ -41,6 +41,7 @@ class Client < ApplicationRecord
     end
 
     def search(str = '')
+      str ||= ''
       where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
     end
   end
