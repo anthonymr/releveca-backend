@@ -40,10 +40,8 @@ class Client < ApplicationRecord
       Current.user&.clients&.where(corporation_id: Current.corporation.id)
     end
 
-    def mine_filtered(str = nil)
-      return Client.mine unless str
-
-      Client.mine.where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
+    def search(str = '')
+      where('name ILIKE ? OR rif ILIKE ?', "%#{str}%", "%#{str}%")
     end
   end
 end

@@ -2,16 +2,16 @@ class ClientsController < ApplicationController
   before_action :check_corporation
   before_action :check_user
 
+  rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
+
   def index
-    filtered_clients = Client.mine_filtered(params[:filter])
+    filtered_clients = Client.mine.search(params[:filter])
     paginated_clients = PaginationService.call(filtered_clients, params[:page], params[:count])
     ok(paginated_clients, 'Clients retrieved successfully')
   end
 
   def show
     ok(client, 'Client retrieved successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Client')
   end
 
   def create
@@ -31,8 +31,6 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('Client')
   end
 
   def patch
@@ -41,8 +39,6 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('Client')
   end
 
   def change_status
@@ -51,8 +47,6 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('Client')
   end
 
   def change_approval
@@ -61,8 +55,6 @@ class ClientsController < ApplicationController
     else
       bad_request(client.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('Client')
   end
 
   private
