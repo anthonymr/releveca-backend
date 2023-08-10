@@ -27,10 +27,10 @@ class Corporation < ApplicationRecord
   end
 
   def mine?
-    Current.user.corporations.include?(self)
+    Current.corporations.include?(self)
   end
 
-  def with_childs
+  def hash_with_children
     attributes.merge(
       base_currency: base_currency.attributes,
       default_currency: default_currency.attributes

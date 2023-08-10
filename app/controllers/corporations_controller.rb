@@ -1,17 +1,20 @@
 class CorporationsController < ApplicationController
+  before_action :check_user
+  before_action :check_corporation, only: %i[update current items]
+
+  rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
+
   def index
     ok(Current.corporations, 'Corporations retrieved successfully')
   end
 
   def show
-    ok(corporation.with_childs, 'Corporation retrieved successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Corporation')
+    ok(corporation.hash_with_children, 'Corporation retrieved successfully')
   end
 
   def create
-    new_corporation = Corporation.create(corporation_params)
-    if new_corporation.persisted?
+    new_corporation = Corporation.new(corporation_params)
+    if new_corporation.save
       created(new_corporation)
     else
       unprocessable_entity(new_corporation)
@@ -19,8 +22,6 @@ class CorporationsController < ApplicationController
   end
 
   def update
-    return unauthorized('No corporation selected') unless Current.corporation
-
     if Current.corporation.update(corporation_params)
       ok(Current.corporation, 'Corporation updated successfully')
     else
@@ -34,28 +35,20 @@ class CorporationsController < ApplicationController
     else
       unprocessable_entity(corporation)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('Corporation')
   end
 
   def current
-    return unauthorized('No corporation selected') unless Current.corporation
-
     ok(Current.corporation, 'Corporation retrieved successfully')
   end
 
   def select
-    return unauthorized unless Current.corporations.include?(corporation)
+    return unauthorized unless corporation.mine?
 
     Current.corporation = corporation
-    ok(Current.corporation.with_childs, 'Corporation setted successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Corporation')
+    ok(Current.corporation.hash_with_children, 'Corporation setted successfully')
   end
 
   def items
-    return unauthorized('No corporation selected') unless Current.corporation
-
     ok(Item.mine_enabled)
   end
 
