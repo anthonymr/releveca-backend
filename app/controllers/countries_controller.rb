@@ -14,7 +14,11 @@ class CountriesController < ApplicationController
 
   def destroy
     country = Country.find(params[:id])
-    ok(country, 'Country deleted') if country.destroy
+    if country.destroy
+      ok(country, 'Country deleted')
+    else
+      unprocessable_entity(country)
+    end
   rescue ActiveRecord::RecordNotFound
     not_found
   end
