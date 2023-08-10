@@ -12,8 +12,4 @@ class Current < ActiveSupport::CurrentAttributes
   def corporations
     user&.corporations&.where(status: 'enabled')
   end
-
-  def payment_conditions
-    corporation&.payment_conditions
-  end
 end

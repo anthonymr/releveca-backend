@@ -11,4 +11,8 @@ class PaymentCondition < ApplicationRecord
   def mine?
     corporation == Current.corporation
   end
+
+  def self.mine
+    Current.corporation.payment_conditions
+  end
 end
