@@ -10,8 +10,8 @@ class Order < ApplicationRecord
   validates :sub_total, :taxes, :total, presence: true
   validates :approved, inclusion: { in: [true, false] }
   validates :status, inclusion: { in: %w[creado procesado enviado entregado] }
-  validates :balance, numericality: { greater_than_or_equal_to: 0 }
-  validates :sub_total, :taxes, :total, :rate, :balance, numericality: { greater_than: 0 }
+  validates :balance, :taxes, numericality: { greater_than_or_equal_to: 0 }
+  validates :sub_total, :total, :rate, :balance, numericality: { greater_than: 0 }
   validates :total, numericality: { greater_than_or_equal_to: :sub_total }
   validates :total, numericality: { greater_than_or_equal_to: :balance }
 
@@ -21,7 +21,7 @@ class Order < ApplicationRecord
     new_order.user = Current.user
     new_order.corporation = Current.corporation
     new_order.balance = new_order.total
-    new_order.rate = new_order.currency.rate
+    new_order.rate = new_order.currency&.rate
   end
 
   def change_status!(new_status)
@@ -72,7 +72,7 @@ class Order < ApplicationRecord
 
   def self.current
     my_orders = Current.corporation.orders.where(user: Current.user)
-    my_orders.includes(:client, :currency, :payment_condition, :order_details)
+    my_orders.includes(:client, :user, :currency, :payment_condition, order_details: :item)
   end
 
   def self.current_json

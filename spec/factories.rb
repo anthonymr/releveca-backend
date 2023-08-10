@@ -53,4 +53,45 @@ FactoryBot.define do
     user { FactoryBot.create(:user) }
     country { FactoryBot.create(:country) }
   end
+
+  factory :payment_condition do
+    code { Faker::Code.unique.sin }
+    description { Faker::Name.unique.name }
+    days { Faker::Number.number(digits: 2) }
+    index { Faker::Number.number(digits: 4) }
+    corporation { FactoryBot.create(:corporation) }
+  end
+
+  factory :order do
+    client { FactoryBot.create(:client) }
+    user { FactoryBot.create(:user) }
+    currency { FactoryBot.create(:currency) }
+    payment_condition { FactoryBot.create(:payment_condition) }
+    corporation { FactoryBot.create(:corporation) }
+    status { 'creado' }
+    sub_total { Faker::Number.decimal(l_digits: 2) }
+    total { sub_total }
+    balance { sub_total }
+    rate { Faker::Number.decimal(l_digits: 2) }
+    taxes { 0 }
+
+    factory :order_with_details do
+      transient do
+        order_details_count { 5 }
+      end
+
+      after(:create) do |order, evaluator|
+        create_list(:order_detail, evaluator.order_details_count, order:)
+      end
+    end
+  end
+
+  factory :order_detail do
+    item { FactoryBot.create(:item) }
+    qty { Faker::Number.number(digits: 2) }
+    unit_price { Faker::Number.decimal(l_digits: 2) }
+    total_price { Faker::Number.decimal(l_digits: 2) }
+    order { FactoryBot.create(:order) }
+    currency { FactoryBot.create(:currency) }
+  end
 end

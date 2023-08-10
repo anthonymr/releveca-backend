@@ -8,8 +8,8 @@ class OrderDetail < ApplicationRecord
   validates :unit_price, :total_price, numericality: { greater_than: 0 }
   validates :order, :item, :currency, presence: true
 
-  after_initialize do |new_order_detail|
-    new_order_detail.unit_price = new_order_detail.item.price
+  before_create do |new_order_detail|
+    new_order_detail.unit_price = new_order_detail.item&.price
     new_order_detail.total_price = new_order_detail.qty * new_order_detail.unit_price
   end
 end
