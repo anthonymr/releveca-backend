@@ -2,40 +2,36 @@ class OrdersController < ApplicationController
   before_action :check_corporation
   before_action :check_user
 
+  rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
+
   def index
-    ok(Current.orders, 'Orders retrieved successfully')
+    ok(Order.current_json, 'Orders retrieved successfully')
   end
 
   def show
-    ok(Current.orders.find(params[:id]).with_relations, 'Order retrieved successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Order')
+    ok(Order.current.find(params[:id]).with_relations, 'Order retrieved successfully')
   end
 
   def pending
-    ok(Current.orders_pending, 'Pending orders retrieved successfully')
+    ok(Order.pending_json, 'Pending orders retrieved successfully')
   end
 
   def with_debt
-    ok(Current.orders_with_debt, 'Orders with debt retrieved successfully')
+    ok(Order.debt_json, 'Orders with debt retrieved successfully')
   end
 
   def create
-    new_order = Order.new_with_initials(order_params)
+    new_order = Order.new(order_params.except(:order_details))
     new_order.add_details(order_params[:order_details])
 
-    if new_order.save
+    if new_order.persisted?
       ok(new_order, 'Order created successfully')
     else
       unprocessable_entity(order)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('Client, item or payment condition not found')
   end
 
   def update
-    order = Order.update_with_references(order_params, params[:id])
-
     if order.update(order_params)
       ok(order, 'Order updated successfully')
     else
@@ -44,8 +40,6 @@ class OrdersController < ApplicationController
   end
 
   def change_status
-    order = Current.orders.find(params[:id])
-
     if order.change_status!(params[:status])
       ok(order, 'Order status changed successfully')
     else
@@ -54,40 +48,32 @@ class OrdersController < ApplicationController
   end
 
   def change_status_next
-    order = Current.orders.find(params[:id])
     order.next_status!
     ok(order, 'Order status changed successfully to next')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Order')
   end
 
   def change_status_previous
-    order = Current.raw_orders.find(params[:id])
     order.previous_status!
     ok(order, 'Order status changed successfully to previous')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Order')
   end
 
   def change_approval
-    order = Current.raw_orders.find(params[:id])
-
     if order.update(approved: params[:approved])
       ok(order, 'Order approval changed successfully')
     else
       unprocessable_entity(order)
     end
-
-  rescue ActiveRecord::RecordNotFound
-    not_found('Order')
   end
 
   def history
-    order = Current.orders.find(params[:id])
     ok(order.order_histories, 'Order history retrieved successfully')
   end
 
   private
+
+  def order
+    @order ||= Order.current.find(params[:id])
+  end
 
   def order_params
     params.permit(
