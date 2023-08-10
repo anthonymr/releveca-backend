@@ -1,18 +1,15 @@
 class PaymentConditionsController < ApplicationController
+  before_action :check_user
   before_action :check_corporation
 
+  rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
+
   def index
-    ok(Current.payment_conditions, 'payment_conditions retrieved successfully')
+    ok(PaymentCondition.mine, 'payment_conditions retrieved successfully')
   end
 
   def show
-    if payment_condition.mine?
-      ok(payment_condition, 'payment_condition retrieved successfully')
-    else
-      not_found('payment_condition')
-    end
-  rescue ActiveRecord::RecordNotFound
-    not_found('payment_condition')
+    ok(payment_condition, 'payment_condition retrieved successfully')
   end
 
   def create
@@ -27,30 +24,25 @@ class PaymentConditionsController < ApplicationController
   end
 
   def update
-    return unauthorized('payment_condition not found') unless payment_condition.mine?
-
     if payment_condition.update(payment_condition_params)
       ok(payment_condition, 'payment_condition updated successfully')
     else
-      unauthorized('payment_condition not valid') 
+      unauthorized('payment_condition not valid')
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('payment_condition')
   end
 
   def destroy
-    return unauthorized('payment_condition not found') unless payment_condition.mine?
-
-    payment_condition.destroy
-    ok(payment_condition, 'payment_condition destroyed successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('payment_condition')
+    if payment_condition.destroy
+      ok(payment_condition, 'payment_condition destroyed successfully')
+    else
+      unauthorized('payment_condition not valid')
+    end
   end
 
   private
 
   def payment_condition
-    @payment_condition ||= Current.payment_conditions.find(params[:id])
+    @payment_condition ||= PaymentCondition.mine.find(params[:id])
   end
 
   def payment_condition_params
