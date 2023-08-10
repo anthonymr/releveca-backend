@@ -1,12 +1,15 @@
 class CurrenciesController < ApplicationController
+  before_action :check_corporation
+  before_action :check_user
+
+  rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
+
   def index
     ok(Currency.all, 'Currencies retrieved successfully')
   end
 
   def show
     ok(currency, 'Currency retrieved successfully')
-  rescue ActiveRecord::RecordNotFound
-    not_found('Currency')
   end
 
   def create
@@ -25,14 +28,10 @@ class CurrenciesController < ApplicationController
     else
       bad_request(currency.errors)
     end
-  rescue ActiveRecord::RecordNotFound
-    not_found('Currency')
   end
 
   def destroy
     ok(currency, 'Currency deleted') if currency.destroy
-  rescue ActiveRecord::RecordNotFound
-    not_found('Currency')
   end
 
   private
