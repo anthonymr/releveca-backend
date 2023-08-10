@@ -4,7 +4,7 @@ module Validations
   private
 
   def check_corporation
-    return true if Current.corporation
+    return true if Current.corporation&.enabled?
 
     unauthorized('First select a corporation')
     false

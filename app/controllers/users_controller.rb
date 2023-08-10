@@ -5,16 +5,16 @@ class UsersController < ApplicationController
   rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
 
   def index
-    ok(User.all.no_password, 'Users retrieved successfully')
+    ok(User.all.secure, 'Users retrieved successfully')
   end
 
   def show
-    ok(user&.no_password, 'User retrieved successfully')
+    ok(user&.secure, 'User retrieved successfully')
   end
 
   def current
     if Current.user
-      ok(Current.user.no_password, 'User retrieved successfully')
+      ok(Current.user.secure, 'User retrieved successfully')
     else
       unauthorized
     end
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   def create
     new_user = User.new(user_params)
     if new_user.save
-      created(new_user.no_password, 'User created')
+      created(new_user.secure, 'User created')
     else
       unprocessable_entity(new_user)
     end
@@ -31,7 +31,7 @@ class UsersController < ApplicationController
 
   def update
     if Current.user.update(user_params)
-      ok(Current.user.no_password, 'User updated')
+      ok(Current.user.secure, 'User updated')
     else
       unprocessable_entity(Current.user)
     end
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
 
   def change_status
     if user.update(status: params[:status])
-      ok(user.no_password, 'User updated')
+      ok(user.secure, 'User updated')
     else
       unprocessable_entity(user)
     end

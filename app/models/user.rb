@@ -14,7 +14,7 @@ class User < ApplicationRecord
   validates :user_name, presence: true, uniqueness: true, length: { minimum: 3, maximum: 50 }
   validates :status, presence: true, inclusion: { in: %w[enabled disabled] }, length: { minimum: 3, maximum: 20 }
 
-  def no_password
+  def secure
     attributes.except('password_digest')
   end
 
@@ -22,7 +22,7 @@ class User < ApplicationRecord
     status == 'enabled'
   end
 
-  def self.no_password
+  def self.secure
     select(:id, :name, :last_name, :user_name, :email)
   end
 end
