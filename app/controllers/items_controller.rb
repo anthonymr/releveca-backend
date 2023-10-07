@@ -3,6 +3,7 @@ class ItemsController < ApplicationController
   before_action :check_corporation
 
   rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
+  rescue_from(ActiveRecord::RecordNotUnique) { |e| not_unique }
 
   def index
     filtered_items = Item.mine.search(params[:filter])

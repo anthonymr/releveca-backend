@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_20_193825) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_07_145402) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,6 +163,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_20_193825) do
     t.index ["var"], name: "index_settings_on_var", unique: true
   end
 
+  create_table "units", force: :cascade do |t|
+    t.string "name"
+    t.bigint "corporation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "code"
+    t.index ["corporation_id"], name: "index_units_on_corporation_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", limit: 50, null: false
     t.string "last_name", limit: 50, null: false
@@ -195,5 +204,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_20_193825) do
   add_foreign_key "orders", "payment_conditions"
   add_foreign_key "orders", "users"
   add_foreign_key "payment_conditions", "corporations"
+  add_foreign_key "units", "corporations"
   add_foreign_key "users", "corporations", column: "current_corporation_id"
 end
