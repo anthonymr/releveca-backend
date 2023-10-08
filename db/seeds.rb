@@ -8,7 +8,7 @@
 
 require 'faker'
 
-# create default currency
+# create test currency
 if Currency.count.zero?
   Currency.create(
     code: 'USD',
@@ -17,7 +17,7 @@ if Currency.count.zero?
   )
 end
 
-# create default corporation
+# create test corporation
 if Corporation.count.zero?
   Corporation.create(
     name: 'Default Corporation',
@@ -32,7 +32,7 @@ if Corporation.count.zero?
   )
 end
 
-# create default admin user
+# create test admin user
 if User.count.zero?
   User.create(
     name: 'Admin',
@@ -44,7 +44,7 @@ if User.count.zero?
   )
 end
 
-# create default items
+# create test items
 if Item.count.zero?
   100.times do |i|
     Item.create(
@@ -56,6 +56,34 @@ if Item.count.zero?
       price: Faker::Commerce.price,
       corporation_id: Corporation.first.id,
       status: 'enabled'
+    )
+  end
+end
+
+# create test country
+Country.create(name: 'VENEZUELA') if Country.count.zero?
+
+
+# create test clients
+if Client.count.zero?
+  100.times do |i|
+    Client.create(
+      code: "CODE#{i}",
+      client_type: 1,
+      name: Faker::Company.name,
+      phone: Faker::PhoneNumber.cell_phone,
+      status: 'enabled',
+      notes: Faker::Lorem.paragraph,
+      address: Faker::Address.full_address,
+      rif: "J#{Faker::Number.number(digits: 8)}",
+      taxpayer: true,
+      nit: Faker::Number.number(digits: 8),
+      email: Faker::Internet.email,
+      index: i,
+      corporation_id: Corporation.first.id,
+      user_id: User.first.id,
+      country_id: Country.first.id,
+      approval: true
     )
   end
 end
