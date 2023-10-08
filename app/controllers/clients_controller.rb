@@ -11,7 +11,8 @@ class ClientsController < ApplicationController
   end
 
   def show
-    ok(client, 'Client retrieved successfully')
+    found_client = ActiveSupport::JSON.decode(client.to_json(include: :country))
+    ok(found_client, 'Client retrieved successfully')
   end
 
   def create
@@ -69,6 +70,6 @@ class ClientsController < ApplicationController
   end
 
   def client_patch_params
-    params.permit(:name, :phone, :notes, :address, :taxpayer, :email)
+    params.permit(:name, :phone, :notes, :address, :taxpayer, :email, :client_type)
   end
 end
