@@ -5,10 +5,11 @@ class Order < ApplicationRecord
   belongs_to :payment_condition
   belongs_to :corporation
   has_many :order_details, dependent: :destroy
+  has_many :details, class_name: 'OrderDetail', dependent: :destroy
   has_many :order_histories, dependent: :destroy
+  has_many :histories, class_name: 'OrderHistory', dependent: :destroy
 
   validates :sub_total, :taxes, :total, presence: true
-  validates :approved, inclusion: { in: [true, false] }
   validates :status, inclusion: { in: %w[creado procesado enviado entregado] }
   validates :balance, :taxes, numericality: { greater_than_or_equal_to: 0 }
   validates :sub_total, :total, :rate, :balance, numericality: { greater_than: 0 }
@@ -16,12 +17,14 @@ class Order < ApplicationRecord
   validates :total, numericality: { greater_than_or_equal_to: :balance }
 
   after_initialize do |new_order|
-    new_order.approved = false
-    new_order.status = 'creado'
-    new_order.user = Current.user
-    new_order.corporation = Current.corporation
-    new_order.balance = new_order.total
-    new_order.rate = new_order.currency&.rate
+    if new_order.new_record?
+      new_order.approved = false
+      new_order.status = 'creado'
+      new_order.user = Current.user
+      new_order.corporation = Current.corporation
+      new_order.balance = new_order.total
+      new_order.rate = new_order.currency&.rate
+    end
   end
 
   def change_status!(new_status)

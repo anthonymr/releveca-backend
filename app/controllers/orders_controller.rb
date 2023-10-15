@@ -58,7 +58,8 @@ class OrdersController < ApplicationController
   end
 
   def change_approval
-    if order.update(approved: params[:approved])
+    if order.update(approved: true)
+      order.histories.create(from: 'no aprobado', to: 'aprobado', user: Current.user)
       ok(order, 'Order approval changed successfully')
     else
       unprocessable_entity(order)
@@ -89,6 +90,8 @@ class OrdersController < ApplicationController
         qty
         item_id
         currency_id
+        unit_price
+        total_price
       ]
     )
   end

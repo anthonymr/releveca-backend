@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_07_145402) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_15_204741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -111,8 +111,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_07_145402) do
   end
 
   create_table "order_histories", force: :cascade do |t|
-    t.string "from", limit: 10, null: false
-    t.string "to", limit: 10, null: false
+    t.string "from", limit: 50, null: false
+    t.string "to", limit: 50, null: false
     t.bigint "user_id", null: false
     t.bigint "order_id", null: false
     t.datetime "created_at", null: false
