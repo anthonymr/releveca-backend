@@ -42,6 +42,8 @@ if User.count.zero?
     password: 'password1',
     status: 'enabled',
   )
+
+  User.corporations << Corporation.first
 end
 
 # create test items

@@ -73,11 +73,6 @@ class Order < ApplicationRecord
     ActiveSupport::JSON.decode(to_json(include: children))
   end
 
-  def self.current
-    my_orders = Current.corporation.orders.where(user: Current.user)
-    my_orders.includes(:client, :user, :currency, :payment_condition, order_details: :item)
-  end
-
   def self.current_json
     current.map(&:with_relations)
   end
