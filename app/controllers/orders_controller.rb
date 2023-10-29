@@ -5,7 +5,18 @@ class OrdersController < ApplicationController
   rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
 
   def index
-    ok(Order.current_json, 'Orders retrieved successfully')
+    orders = Current.user.orders.includes(:client, :user, :currency, :payment_condition, order_details: :item)
+    
+    filtered_orders = []
+
+    orders.each do |order|
+      if order.client.name.downcase.include?(params[:filter].downcase) || order.client.code.downcase.include?(params[:filter].downcase)
+        filtered_orders << order.with_relations
+      end
+    end
+
+    filtered_orders = PaginationService.call(filtered_orders, params[:page], params[:count])
+    ok(filtered_orders, 'Items retrieved successfully')
   end
 
   def show
@@ -58,7 +69,8 @@ class OrdersController < ApplicationController
   end
 
   def change_approval
-    if order.update(approved: params[:approved])
+    if order.update(approved: true)
+      order.histories.create(from: 'no aprobado', to: 'aprobado', user: Current.user)
       ok(order, 'Order approval changed successfully')
     else
       unprocessable_entity(order)
@@ -89,6 +101,8 @@ class OrdersController < ApplicationController
         qty
         item_id
         currency_id
+        unit_price
+        total_price
       ]
     )
   end

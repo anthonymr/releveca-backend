@@ -52,6 +52,14 @@ class CorporationsController < ApplicationController
     ok(Item.mine.enabled)
   end
 
+  def base_currency
+    ok(Current.corporation.base_currency)
+  end
+
+  def units
+    ok(Current.corporation.units)
+  end
+
   private
 
   def corporation_params

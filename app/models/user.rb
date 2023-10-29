@@ -2,7 +2,7 @@ class User < ApplicationRecord
   has_secure_password
   has_and_belongs_to_many :corporations
   belongs_to :current_corporation, class_name: 'Corporation', optional: true
-  has_many :orders, dependent: :restrict_with_error
+  has_many :orders, -> { where('corporation_id = ?', Current.corporation.id) }, dependent: :restrict_with_error
   has_many :order_histories, dependent: :restrict_with_error
   has_many :clients, dependent: :restrict_with_error
 

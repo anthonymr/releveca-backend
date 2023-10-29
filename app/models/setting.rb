@@ -1,5 +1,6 @@
 class Setting < RailsSettings::Base
   field :order_statuses, type: :array, default: %w[creado procesado enviado entregado]
+  field :history_statuses, type: :array, default: %w[creado procesado enviado entregado no\ aprobado aprobado]
   field :modules, type: :hash, default: {
     items: {
       name: 'Artículos',

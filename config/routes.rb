@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       resources :users, except: %i[new edit update destroy]
 
       get 'corporations/current', to: 'corporations#current', as: 'current_corporation'
+      get 'corporations/base_currency', to: 'corporations#base_currency', as: 'corporation_base_currency'
+      get 'corporations/units', to: 'corporations#units', as: 'corporation_units'
       post 'corporations/current', to: 'corporations#select', as: 'select_corporation'
       get 'corporations/items', to: 'corporations#items', as: 'corporation_items'
       put 'corporations', to: 'corporations#update', as: 'update_corporation'

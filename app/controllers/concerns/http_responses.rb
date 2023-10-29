@@ -17,6 +17,10 @@ module HttpResponses
     render json: { errors: ["#{entity_name} not found"] }, status: :not_found
   end
 
+  def not_unique(entity_name = 'Entity')
+    render json: { errors: ["#{entity_name} not unique"] }, status: :conflict
+  end
+
   def invalid_login(message = 'Invalid username or password')
     render json: { errors: [message] }, status: :unauthorized
   end
