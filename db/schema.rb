@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_15_204741) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_29_220154) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "banks", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "number"
+    t.string "email"
+    t.string "phone"
+    t.string "type"
+    t.string "rif"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "currency_id", null: false
+    t.bigint "corporation_id", null: false
+    t.index ["corporation_id"], name: "index_banks_on_corporation_id"
+    t.index ["currency_id"], name: "index_banks_on_currency_id"
+  end
 
   create_table "clients", force: :cascade do |t|
     t.string "code", limit: 50, null: false
@@ -155,6 +171,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_15_204741) do
     t.index ["corporation_id"], name: "index_payment_conditions_on_corporation_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.decimal "amount", null: false
+    t.string "status", default: "creado", null: false
+    t.string "reference"
+    t.bigint "bank_id", null: false
+    t.bigint "order_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_id"], name: "index_payments_on_bank_id"
+    t.index ["order_id"], name: "index_payments_on_order_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string "var", null: false
     t.text "value"
@@ -187,6 +215,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_15_204741) do
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
   end
 
+  add_foreign_key "banks", "corporations"
+  add_foreign_key "banks", "currencies"
   add_foreign_key "clients", "corporations"
   add_foreign_key "clients", "countries"
   add_foreign_key "clients", "users"
@@ -204,6 +234,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_15_204741) do
   add_foreign_key "orders", "payment_conditions"
   add_foreign_key "orders", "users"
   add_foreign_key "payment_conditions", "corporations"
+  add_foreign_key "payments", "banks"
+  add_foreign_key "payments", "orders"
   add_foreign_key "units", "corporations"
   add_foreign_key "users", "corporations", column: "current_corporation_id"
 end

@@ -8,6 +8,7 @@ class Order < ApplicationRecord
   has_many :details, class_name: 'OrderDetail', dependent: :destroy
   has_many :order_histories, dependent: :destroy
   has_many :histories, class_name: 'OrderHistory', dependent: :destroy
+  has_many :payments, dependent: :restrict_with_error
 
   validates :sub_total, :taxes, :total, presence: true
   validates :status, inclusion: { in: %w[creado procesado enviado entregado] }
@@ -25,6 +26,11 @@ class Order < ApplicationRecord
       new_order.balance = new_order.total
       new_order.rate = new_order.currency&.rate
     end
+  end
+
+  def add_payment(payment_params)
+    # the payment cant be greater than the balance
+    # rest the payment to the balance after register the payment
   end
 
   def change_status!(new_status)
