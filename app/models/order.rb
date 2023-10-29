@@ -69,7 +69,7 @@ class Order < ApplicationRecord
   end
 
   def with_relations
-    children = [:client, :user, :currency, :payment_condition, { order_details: { include: :item } }]
+    children = [:client, :user, :currency, :payment_condition, { histories: {include: :user} }, { order_details: { include: :item } }]
     ActiveSupport::JSON.decode(to_json(include: children))
   end
 

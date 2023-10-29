@@ -20,7 +20,8 @@ class OrdersController < ApplicationController
   end
 
   def show
-    ok(Order.current.find(params[:id]).with_relations, 'Order retrieved successfully')
+    order = Current.user.orders.find(params[:id])
+    ok(order.with_relations, 'Order retrieved successfully')
   end
 
   def pending
