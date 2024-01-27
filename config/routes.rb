@@ -33,6 +33,12 @@ Rails.application.routes.draw do
 
       resources :payment_conditions, excep: %i[new edit]
 
+      get 'warranties/grouped_by_item', to: 'warranties#grouped_by_item', as: 'warranties_grouped_by_item'
+      get 'warranties/grouped_by_client', to: 'warranties#grouped_by_client', as: 'warranties_grouped_by_client'
+      resources :warranties, except: %i[new edit]
+
+      resources :warranty_states, only: %i[index create destroy]
+
       patch 'orders/:id/approval', to: 'orders#change_approval', as: 'order_change_approval'
       patch 'orders/:id/status', to: 'orders#change_status', as: 'order_change_status'
       patch 'orders/:id/status_next', to: 'orders#change_status_next', as: 'order_change_status_next'

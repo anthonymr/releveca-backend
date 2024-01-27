@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_29_220154) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_27_142108) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -215,6 +215,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_29_220154) do
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
   end
 
+  create_table "warranties", force: :cascade do |t|
+    t.decimal "quantity", precision: 10, scale: 2, default: "0.0", null: false
+    t.string "notes", limit: 500
+    t.string "status", limit: 50, null: false
+    t.bigint "client_id", null: false
+    t.bigint "item_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "corporation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_warranties_on_client_id"
+    t.index ["corporation_id"], name: "index_warranties_on_corporation_id"
+    t.index ["item_id"], name: "index_warranties_on_item_id"
+    t.index ["user_id"], name: "index_warranties_on_user_id"
+  end
+
+  create_table "warranty_states", force: :cascade do |t|
+    t.string "name", limit: 50, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "banks", "corporations"
   add_foreign_key "banks", "currencies"
   add_foreign_key "clients", "corporations"
@@ -238,4 +260,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_29_220154) do
   add_foreign_key "payments", "orders"
   add_foreign_key "units", "corporations"
   add_foreign_key "users", "corporations", column: "current_corporation_id"
+  add_foreign_key "warranties", "clients"
+  add_foreign_key "warranties", "corporations"
+  add_foreign_key "warranties", "items"
+  add_foreign_key "warranties", "users"
 end

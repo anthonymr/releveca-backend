@@ -1,0 +1,2 @@
+class WarrantyState < ApplicationRecord
+end

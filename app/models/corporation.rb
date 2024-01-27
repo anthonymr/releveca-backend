@@ -6,6 +6,7 @@ class Corporation < ApplicationRecord
   has_many :orders, dependent: :restrict_with_error
   has_many :units, dependent: :destroy
   has_many :banks, dependent: :restrict_with_error
+  has_many :warranties, dependent: :restrict_with_error
   belongs_to :base_currency, class_name: 'Currency'
   belongs_to :default_currency, class_name: 'Currency'
 
