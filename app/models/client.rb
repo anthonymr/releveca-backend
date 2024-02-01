@@ -5,7 +5,7 @@ class Client < ApplicationRecord
   has_many :orders, dependent: :restrict_with_error
 
   validates :code, presence: true, length: { maximum: 50 }, uniqueness: { scope: :corporation_id }
-  validates :client_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+  validates :client_type, presence: true
   validates :name, presence: true, length: { maximum: 250 }
   validates :phone, presence: true, length: { maximum: 50 }
   validates :status, presence: true, length: { maximum: 50 }, inclusion: { in: %w[enabled disabled] }
