@@ -1,21 +1,42 @@
 class WarrantiesController < ApplicationController
     def index
-        if params[:filter] == "today"
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).all
-        elsif params[:filter] == "yesterday"
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.yesterday.beginning_of_day..Time.zone.now.yesterday.end_of_day).all
-        elsif params[:filter] == "week"
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).all
-        elsif params[:filter] == "lastWeek"
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.last_week.beginning_of_week..Time.zone.now.last_week.end_of_week).all
-        elsif params[:filter] == "month"
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).all
-        elsif params[:filter] == "lastMonth"
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.last_month.beginning_of_month..Time.zone.now.last_month.end_of_month).all
-        elsif params[:filter] == "year"
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).all
+        clients = params[:clients].split(',') if params[:clients]
+        items = params[:items].split(',') if params[:items]
+        from = params[:from] if params[:from]
+        to = params[:to] if params[:to]
+
+        if !from.present? && !to.present?
+            if params[:filter] == "today"
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).all
+            elsif params[:filter] == "yesterday"
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.yesterday.beginning_of_day..Time.zone.now.yesterday.end_of_day).all
+            elsif params[:filter] == "week"
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).all
+            elsif params[:filter] == "lastWeek"
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.last_week.beginning_of_week..Time.zone.now.last_week.end_of_week).all
+            elsif params[:filter] == "month"
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).all
+            elsif params[:filter] == "lastMonth"
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.last_month.beginning_of_month..Time.zone.now.last_month.end_of_month).all
+            elsif params[:filter] == "year"
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).all
+            else
+                warranties = Warranty.mine.includes(:client, :item, :user, :corporation).all
+            end
         else
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).all
+            from = Date.parse(from)
+            to = Date.parse(to)
+            warranties = Warranty.mine.includes(:client, :item, :user, :corporation).where(created_at: from.beginning_of_day..to.end_of_day).all
+        end
+
+        if clients.present? && clients.any?
+            clients = clients.map(&:to_i)
+            warranties = warranties.where(client_id: clients).all
+        end
+
+        if items.present? && items.any?
+            items = items.map(&:to_i)
+            warranties = warranties.where(item_id: items).all
         end
 
         warranties_json = warranties.as_json(
