@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_27_142108) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_01_163027) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,9 +38,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_27_142108) do
     t.string "status", limit: 50, null: false
     t.string "notes", limit: 500
     t.string "address", limit: 500, null: false
-    t.string "rif", limit: 15, null: false
+    t.string "rif", limit: 30, null: false
     t.boolean "taxpayer"
-    t.string "nit", limit: 15
+    t.string "nit", limit: 30
     t.string "email", limit: 50
     t.integer "index"
     t.bigint "corporation_id", null: false
@@ -67,6 +67,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_27_142108) do
     t.string "status", limit: 20, default: "enabled", null: false
     t.bigint "default_currency_id"
     t.bigint "base_currency_id"
+    t.string "db_driver"
+    t.string "db_server"
+    t.string "db_name"
+    t.string "db_trusted"
     t.index ["base_currency_id"], name: "index_corporations_on_base_currency_id"
     t.index ["default_currency_id"], name: "index_corporations_on_default_currency_id"
     t.index ["name"], name: "index_corporations_on_name", unique: true

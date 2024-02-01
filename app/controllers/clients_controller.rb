@@ -5,9 +5,13 @@ class ClientsController < ApplicationController
   rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
 
   def index
-    filtered_clients = Client.mine.search(params[:filter])
-    paginated_clients = PaginationService.call(filtered_clients, params[:page], params[:count])
-    ok(paginated_clients, 'Clients retrieved successfully')
+      filtered_clients = Client.mine.search(params[:filter])
+      if params[:page] != nil && params[:count] != nil
+        paginated_clients = PaginationService.call(filtered_clients, params[:page], params[:count])
+        ok(paginated_clients, 'Clients retrieved successfully')
+      else
+        ok({ items: filtered_clients }, 'Clients retrieved successfully')
+      end
   end
 
   def show
