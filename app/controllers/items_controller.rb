@@ -7,8 +7,12 @@ class ItemsController < ApplicationController
 
   def index
     filtered_items = Item.mine.search(params[:filter])
-    paginated_items = PaginationService.call(filtered_items, params[:page], params[:count])
-    ok(paginated_items, 'Items retrieved successfully')
+    if params[:page] != nil && params[:count] != nil
+      paginated_items = PaginationService.call(filtered_items, params[:page], params[:count])
+      ok(paginated_items, 'Items retrieved successfully')
+    else
+      ok({ items: filtered_items }, 'Items retrieved successfully')
+    end
   end
 
   def show
