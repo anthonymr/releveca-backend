@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_01_221326) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_01_222259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,17 +31,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_01_221326) do
   end
 
   create_table "clients", force: :cascade do |t|
-    t.string "code", limit: 50, null: false
+    t.string "code", limit: 200, null: false
     t.string "client_type", default: "1", null: false
-    t.string "name", limit: 250, null: false
-    t.string "phone", limit: 50, null: false
-    t.string "status", limit: 50, null: false
+    t.string "name", limit: 200, null: false
+    t.string "phone", limit: 200, null: false
+    t.string "status", limit: 200, null: false
     t.string "notes", limit: 500
     t.string "address", limit: 500, null: false
-    t.string "rif", limit: 30, null: false
+    t.string "rif", limit: 200, null: false
     t.boolean "taxpayer"
-    t.string "nit", limit: 30
-    t.string "email", limit: 50
+    t.string "nit", limit: 200
+    t.string "email", limit: 200
     t.integer "index"
     t.bigint "corporation_id", null: false
     t.bigint "user_id", null: false
