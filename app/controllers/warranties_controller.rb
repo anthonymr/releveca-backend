@@ -39,6 +39,22 @@ class WarrantiesController < ApplicationController
             warranties = warranties.where(item_id: items).all
         end
 
+        if params[:global_filter].present? && params[:global_filter_field].present?
+            global_filter = params[:global_filter].downcase
+            global_filter_field = params[:global_filter_field]
+
+            if global_filter_field == "client_name"
+                warranties = warranties.joins(:client).where("LOWER(clients.name) LIKE ?", "%#{global_filter}%").all
+            elsif global_filter_field == "item_code"
+                warranties = warranties.joins(:item).where("LOWER(items.code) LIKE ?", "%#{global_filter}%").all
+            elsif global_filter_field == "item_name"
+                warranties = warranties.joins(:item).where("LOWER(items.name) LIKE ?", "%#{global_filter}%").all
+            elsif global_filter_field == "notes"
+                warranties = warranties.where("LOWER(notes) LIKE ?", "%#{global_filter}%").all
+            elsif global_filter_field == "status"
+                warranties = warranties.where("LOWER(status) LIKE ?", "%#{global_filter}%").all
+            end
+        end
         warranties_json = warranties.as_json(
             include: {
                 client: { only: [:id, :name] },
