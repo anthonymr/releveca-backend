@@ -7,6 +7,9 @@ class WarrantyStatesController < ApplicationController
     end
 
     def create
+        pp "###############"
+        pp warranty_state_params
+        pp "###############"
         new_warranty_state = WarrantyState.new(warranty_state_params)
 
         if new_warranty_state.save
@@ -23,7 +26,7 @@ class WarrantyStatesController < ApplicationController
     private
 
     def warranty_state_params
-        params.permit(:name)
+        params.permit(:name, :color)
     end
 
     def warranty_state
