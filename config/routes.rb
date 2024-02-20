@@ -29,8 +29,9 @@ Rails.application.routes.draw do
       put 'clients/:id', to: 'clients#update', as: 'client_update'
       resources :clients, only: %i[create index show]
 
+      resources :suppliers, only: %i[index show]
+      resources :sellers, only: %i[index show]
       resources :currencies, excep: %i[new edit]
-
       resources :payment_conditions, excep: %i[new edit]
 
       get 'warranties/grouped_by_item', to: 'warranties#grouped_by_item', as: 'warranties_grouped_by_item'

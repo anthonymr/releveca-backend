@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_03_192134) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_20_153712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "banks", force: :cascade do |t|
     t.string "name", null: false
@@ -187,12 +215,41 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_192134) do
     t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
+  create_table "sellers", force: :cascade do |t|
+    t.string "code"
+    t.string "name"
+    t.string "seller_type"
+    t.string "rif"
+    t.string "address"
+    t.string "phones"
+    t.string "commission"
+    t.string "sale_commision"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string "var", null: false
     t.text "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["var"], name: "index_settings_on_var", unique: true
+  end
+
+  create_table "suppliers", force: :cascade do |t|
+    t.string "code"
+    t.string "name"
+    t.string "inactive"
+    t.string "zone"
+    t.string "address"
+    t.string "phones"
+    t.string "supplier_type"
+    t.string "rif"
+    t.string "email"
+    t.string "city"
+    t.string "zip"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "units", force: :cascade do |t|
@@ -229,9 +286,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_192134) do
     t.bigint "corporation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "supplier_id", null: false
+    t.bigint "seller_id", null: false
+    t.text "notes2"
     t.index ["client_id"], name: "index_warranties_on_client_id"
     t.index ["corporation_id"], name: "index_warranties_on_corporation_id"
     t.index ["item_id"], name: "index_warranties_on_item_id"
+    t.index ["seller_id"], name: "index_warranties_on_seller_id"
+    t.index ["supplier_id"], name: "index_warranties_on_supplier_id"
     t.index ["user_id"], name: "index_warranties_on_user_id"
   end
 
@@ -242,6 +304,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_192134) do
     t.string "color"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "banks", "corporations"
   add_foreign_key "banks", "currencies"
   add_foreign_key "clients", "corporations"
@@ -268,5 +332,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_192134) do
   add_foreign_key "warranties", "clients"
   add_foreign_key "warranties", "corporations"
   add_foreign_key "warranties", "items"
+  add_foreign_key "warranties", "sellers"
+  add_foreign_key "warranties", "suppliers"
   add_foreign_key "warranties", "users"
 end

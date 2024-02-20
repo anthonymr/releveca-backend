@@ -59,3 +59,5 @@ group :development do
 end
 
 gem 'rails-settings-cached', '~> 2.9'
+
+gem 'activestorage'

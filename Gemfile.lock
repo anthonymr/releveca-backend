@@ -196,6 +196,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activestorage
   bcrypt (~> 3.1.7)
   bootsnap
   debug
