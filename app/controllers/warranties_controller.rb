@@ -66,6 +66,9 @@ class WarrantiesController < ApplicationController
                 warranties = warranties.joins(:seller).where("LOWER(sellers.name) LIKE ?", "%#{global_filter}%").all
             end
         end
+
+        warranties = warranties.order(created_at: :asc)
+
         warranties_json = warranties.as_json(
             include: {
                 client: { only: [:id, :name, :email] },
@@ -82,7 +85,11 @@ class WarrantiesController < ApplicationController
     end
 
     def show
-        ok(warranty, 'Warranty retrieved successfully')
+        warranty_json = warranty.as_json(
+            methods: [:files_count, :files_urls]
+        )
+        
+        ok(warranty_json, 'Warranty retrieved successfully')
     end
 
     def create
@@ -92,6 +99,8 @@ class WarrantiesController < ApplicationController
         new_warranty.corporation_id = Current.corporation.id
 
         if new_warranty.save
+            new_warranty.files.purge
+
             if warranty_params[:files].present?
                 warranty_params[:files].each do |file|
                     new_warranty.files.attach(file)
@@ -166,6 +175,7 @@ class WarrantiesController < ApplicationController
             :status,
             :notes,
             :notes2,
+            :quantity,
             :files => []
         )
     end
