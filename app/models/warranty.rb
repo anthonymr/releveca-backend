@@ -6,7 +6,7 @@ class Warranty < ApplicationRecord
     belongs_to :supplier
     belongs_to :seller
 
-    #has_many_attached :files
+    has_many_attached :files
 
     def files_count
         files.count
