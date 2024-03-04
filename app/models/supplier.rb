@@ -3,6 +3,6 @@ class Supplier < ApplicationRecord
     belongs_to :corporation
 
     def self.mine
-        all
+        Supplier.where(corporation_id: Current.corporation.id)
     end
 end
