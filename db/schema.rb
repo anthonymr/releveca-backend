@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_04_124224) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_04_125934) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -78,6 +78,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_124224) do
     t.datetime "updated_at", null: false
     t.boolean "approval", default: false, null: false
     t.string "seller_code"
+    t.index ["code"], name: "index_clients_on_code", unique: true
     t.index ["corporation_id"], name: "index_clients_on_corporation_id"
     t.index ["country_id"], name: "index_clients_on_country_id"
     t.index ["rif"], name: "index_clients_on_rif", unique: true
@@ -142,6 +143,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_124224) do
     t.datetime "updated_at", null: false
     t.string "status", limit: 20, default: "enabled", null: false
     t.string "supplier_code"
+    t.index ["code"], name: "index_items_on_code", unique: true
     t.index ["corporation_id", "code"], name: "index_items_on_corporation_id_and_code", unique: true
     t.index ["corporation_id"], name: "index_items_on_corporation_id"
   end
@@ -253,6 +255,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_124224) do
     t.string "zip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_suppliers_on_code", unique: true
   end
 
   create_table "units", force: :cascade do |t|
