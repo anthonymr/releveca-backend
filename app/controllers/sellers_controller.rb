@@ -2,7 +2,7 @@ class SellersController < ApplicationController
     rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
 
     def index
-        ok(Seller.mine, 'Sellers retrieved successfully')
+        ok(Seller.mine.order(:code), 'Sellers retrieved successfully')
     end
 
     def show
