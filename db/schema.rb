@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_04_125934) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_04_132322) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -78,7 +78,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_125934) do
     t.datetime "updated_at", null: false
     t.boolean "approval", default: false, null: false
     t.string "seller_code"
-    t.index ["code"], name: "index_clients_on_code", unique: true
+    t.index ["code", "corporation_id"], name: "index_clients_on_code_and_corporation_id", unique: true
     t.index ["corporation_id"], name: "index_clients_on_corporation_id"
     t.index ["country_id"], name: "index_clients_on_country_id"
     t.index ["rif"], name: "index_clients_on_rif", unique: true
@@ -143,7 +143,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_125934) do
     t.datetime "updated_at", null: false
     t.string "status", limit: 20, default: "enabled", null: false
     t.string "supplier_code"
-    t.index ["code"], name: "index_items_on_code", unique: true
     t.index ["corporation_id", "code"], name: "index_items_on_corporation_id_and_code", unique: true
     t.index ["corporation_id"], name: "index_items_on_corporation_id"
   end
@@ -230,7 +229,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_125934) do
     t.string "sale_commision"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["code"], name: "index_sellers_on_code", unique: true
+    t.bigint "corporation_id"
+    t.index ["code", "corporation_id"], name: "index_sellers_on_code_and_corporation_id", unique: true
+    t.index ["corporation_id"], name: "index_sellers_on_corporation_id"
   end
 
   create_table "settings", force: :cascade do |t|
@@ -255,7 +256,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_125934) do
     t.string "zip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["code"], name: "index_suppliers_on_code", unique: true
+    t.bigint "corporation_id"
+    t.index ["code", "corporation_id"], name: "index_suppliers_on_code_and_corporation_id", unique: true
+    t.index ["corporation_id"], name: "index_suppliers_on_corporation_id"
   end
 
   create_table "units", force: :cascade do |t|
@@ -333,6 +336,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_125934) do
   add_foreign_key "payment_conditions", "corporations"
   add_foreign_key "payments", "banks"
   add_foreign_key "payments", "orders"
+  add_foreign_key "sellers", "corporations"
+  add_foreign_key "suppliers", "corporations"
   add_foreign_key "units", "corporations"
   add_foreign_key "users", "corporations", column: "current_corporation_id"
   add_foreign_key "warranties", "clients"
