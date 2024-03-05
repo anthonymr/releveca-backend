@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       patch 'items/:id/status', to: 'items#change_status', as: 'item_change_status'
       patch 'items/:id/stock', to: 'items#change_stock', as: 'item_change_stock'
       get 'items/public', to: 'items#public_items', as: 'public_items'
+      get 'items/public_home', to: 'items#public_home_items', as: 'public_home_items'
       resources :items, except: %i[new edit destroy]
 
       resources :countries, only: %i[create index destroy]

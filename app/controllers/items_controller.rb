@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
-  skip_before_action :authenticate_user, only: %i[public_items]
-  before_action :check_user, except: %i[public_items]
-  before_action :check_corporation, except: %i[public_items]
+  skip_before_action :authenticate_user, only: %i[public_items public_home_items]
+  before_action :check_user, except: %i[public_items public_home_items]
+  before_action :check_corporation, except: %i[public_items public_home_items]
 
   rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
   rescue_from(ActiveRecord::RecordNotUnique) { |e| not_unique }
@@ -55,8 +55,14 @@ class ItemsController < ApplicationController
   end
 
   def public_items
-    items = Item.all.pluck(:code, :name, :model, :stock, :unit)
+    items = Item.all.as_json(only: %i[code name model stock unit show_in_web_home_tags])
     ok({ items: items }, 'Public items retrieved successfully')
+  end
+
+  def public_home_items
+    items = Item.where(show_in_web_home: true).order(:show_in_web_home_order).as_json(only: %i[code name model stock unit show_in_web_home_tags])
+
+    ok({ items: items }, 'Public home items retrieved successfully')
   end
 
   private
