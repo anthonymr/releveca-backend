@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_05_125448) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_05_133800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,6 +56,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_125448) do
     t.bigint "corporation_id", null: false
     t.index ["corporation_id"], name: "index_banks_on_corporation_id"
     t.index ["currency_id"], name: "index_banks_on_currency_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "color"
+    t.boolean "show_in_web_home", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "clients", force: :cascade do |t|
@@ -146,6 +155,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_125448) do
     t.boolean "show_in_web_home", default: false
     t.integer "show_in_web_home_order"
     t.string "show_in_web_home_tags"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_items_on_category_id"
     t.index ["corporation_id", "code"], name: "index_items_on_corporation_id_and_code", unique: true
     t.index ["corporation_id"], name: "index_items_on_corporation_id"
   end
@@ -325,6 +336,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_05_125448) do
   add_foreign_key "clients", "users"
   add_foreign_key "corporations", "currencies", column: "base_currency_id"
   add_foreign_key "corporations", "currencies", column: "default_currency_id"
+  add_foreign_key "items", "categories"
   add_foreign_key "items", "corporations"
   add_foreign_key "order_details", "currencies"
   add_foreign_key "order_details", "items"

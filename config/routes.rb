@@ -23,6 +23,9 @@ Rails.application.routes.draw do
       get 'items/public_home', to: 'items#public_home_items', as: 'public_home_items'
       resources :items, except: %i[new edit destroy]
 
+      get 'categories/public', to: 'categories#public_categories', as: 'public_categories'
+      get 'categories/public_home', to: 'categories#public_home_categories', as: 'public_home_categories'
+
       resources :countries, only: %i[create index destroy]
 
       patch 'clients/:id/approval', to: 'clients#change_approval', as: 'client_change_approval'
