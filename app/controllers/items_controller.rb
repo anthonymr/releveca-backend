@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
-  before_action :check_user
-  before_action :check_corporation
+  skip_before_action :authenticate_user, only: %i[public_items]
+  before_action :check_user, except: %i[public_items]
+  before_action :check_corporation, except: %i[public_items]
 
   rescue_from(ActiveRecord::RecordNotFound) { |e| not_found(e.message) }
   rescue_from(ActiveRecord::RecordNotUnique) { |e| not_unique }
@@ -51,6 +52,11 @@ class ItemsController < ApplicationController
     else
       bad_request(item.errors)
     end
+  end
+
+  def public_items
+    items = Item.all.pluck(:code, :name, :model, :stock, :unit)
+    ok({ items: items }, 'Public items retrieved successfully')
   end
 
   private
