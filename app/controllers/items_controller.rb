@@ -55,12 +55,12 @@ class ItemsController < ApplicationController
   end
 
   def public_items
-    items = Item.all.as_json(only: %i[code name model stock unit show_in_web_home_tags])
+    items = Item.all.as_json(only: %i[code name model stock unit show_in_web_home_tags category_id])
     ok({ items: items }, 'Public items retrieved successfully')
   end
 
   def public_home_items
-    items = Item.where(show_in_web_home: true).order(:show_in_web_home_order).as_json(only: %i[code name model stock unit show_in_web_home_tags])
+    items = Item.where(show_in_web_home: true).order(:show_in_web_home_order).as_json(only: %i[code name model stock unit show_in_web_home_tags category_id])
 
     ok({ items: items }, 'Public home items retrieved successfully')
   end
