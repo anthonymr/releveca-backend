@@ -7,28 +7,63 @@ class WarrantiesController < ApplicationController
         from = params[:from] if params[:from]
         to = params[:to] if params[:to]
 
+        warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).with_attached_files
+
         if !from.present? && !to.present?
             if params[:filter] == "today"
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).all
+                if params[:include_updated_at]
+                    warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", Time.zone.now.beginning_of_day, Time.zone.now.end_of_day, Time.zone.now.beginning_of_day, Time.zone.now.end_of_day).all
+                else
+                    warranties = warranties.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).all
+                end
             elsif params[:filter] == "yesterday"
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: Time.zone.now.yesterday.beginning_of_day..Time.zone.now.yesterday.end_of_day).all
+                if params[:include_updated_at]
+                    warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", Time.zone.now.yesterday.beginning_of_day, Time.zone.now.yesterday.end_of_day, Time.zone.now.yesterday.beginning_of_day, Time.zone.now.yesterday.end_of_day).all
+                else
+                    warranties = warranties.where(created_at: Time.zone.now.yesterday.beginning_of_day..Time.zone.now.yesterday.end_of_day).all
+                end
             elsif params[:filter] == "week"
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).all
+                if params[:include_updated_at]
+                    warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", Time.zone.now.beginning_of_week, Time.zone.now.end_of_week, Time.zone.now.beginning_of_week, Time.zone.now.end_of_week).all
+                else
+                    warranties = warranties.where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).all
+                end
             elsif params[:filter] == "lastWeek"
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: Time.zone.now.last_week.beginning_of_week..Time.zone.now.last_week.end_of_week).all
+                if params[:include_updated_at]
+                    warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", Time.zone.now.last_week.beginning_of_week, Time.zone.now.last_week.end_of_week, Time.zone.now.last_week.beginning_of_week, Time.zone.now.last_week.end_of_week).all
+                else
+                    warranties = warranties.where(created_at: Time.zone.now.last_week.beginning_of_week..Time.zone.now.last_week.end_of_week).all
+                end
             elsif params[:filter] == "month"
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).all
+                if params[:include_updated_at]
+                    warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", Time.zone.now.beginning_of_month, Time.zone.now.end_of_month, Time.zone.now.beginning_of_month, Time.zone.now.end_of_month).all
+                else
+                    warranties = warranties.where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).all
+                end
             elsif params[:filter] == "lastMonth"
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: Time.zone.now.last_month.beginning_of_month..Time.zone.now.last_month.end_of_month).all
+                if params[:include_updated_at]
+                    warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", Time.zone.now.last_month.beginning_of_month, Time.zone.now.last_month.end_of_month, Time.zone.now.last_month.beginning_of_month, Time.zone.now.last_month.end_of_month).all
+                else
+                    warranties = warranties.where(created_at: Time.zone.now.last_month.beginning_of_month..Time.zone.now.last_month.end_of_month).all
+                end
             elsif params[:filter] == "year"
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).all
+                if params[:include_updated_at]
+                    warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", Time.zone.now.beginning_of_year, Time.zone.now.end_of_year, Time.zone.now.beginning_of_year, Time.zone.now.end_of_year).all
+                else
+                    warranties = warranties.where(created_at: Time.zone.now.beginning_of_year..Time.zone.now.end_of_year).all
+                end
             else
-                warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).all
+                warranties = warranties.all
             end
         else
             from = Date.parse(from)
             to = Date.parse(to)
-            warranties = Warranty.mine.includes(:client, :item, :user, :corporation, :supplier, :seller).where(created_at: from.beginning_of_day..to.end_of_day).all
+
+            if params[:include_updated_at]
+                warranties = warranties.where("(created_at >= ? AND created_at <= ?) OR (updated_at >= ? AND updated_at <= ?)", from.beginning_of_day, to.end_of_day, from.beginning_of_day, to.end_of_day).all
+            else
+                warranties = warranties.where(created_at: from.beginning_of_day..to.end_of_day).all
+            end
         end
 
         if clients.present? && clients.any?
@@ -76,7 +111,7 @@ class WarrantiesController < ApplicationController
                 user: { only: [:id, :name] },
                 corporation: { only: [:id, :name] },
                 supplier: { only: [:id, :name] },
-                seller: { only: [:id, :name] }
+                seller: { only: [:id, :name] },
             },
             methods: [:files_count, :files_urls]
         )
