@@ -112,8 +112,8 @@ class WarrantiesController < ApplicationController
                 corporation: { only: [:id, :name] },
                 supplier: { only: [:id, :name] },
                 seller: { only: [:id, :name] },
-            },
-            methods: [:files_count, :files_urls]
+                files: { only: [:blob], include: { blob: {} }}
+            }
         )
 
         ok(warranties_json, 'Warranties retrieved successfully')
